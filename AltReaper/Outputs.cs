@@ -45,7 +45,7 @@ namespace Reaper
             Console.WriteLine(String.Join("\r\n", cArray));
             return cArray;
         }
-        public static bool MailOutput(String recipient, String subjectLine, String[] content, String[] langValue)
+        public static bool MailOutput(String recipient, String subjectLine, String[] content, String[] langValue, String sender, String pwd, String host, int port)
         {
             //salutation
             Console.Write($"\nEnter your name or type \"no\" to not be addressed (without quotes) \n>");
@@ -53,10 +53,9 @@ namespace Reaper
             if (name == langValue[17]) { name = ""; }
 
             //Smtp config
-            string sender = "noreply@WetterSense.de";
-            var smtpClient = new SmtpClient("smtp.strato.de",587)
+            var smtpClient = new SmtpClient(host, port)
             {
-                Credentials = new NetworkCredential(sender, "extremelySecureMailServerPasswordThatNoOneWouldBeAbleToGuess"),
+                Credentials = new NetworkCredential(sender, pwd),
                 EnableSsl = true,
             };
 

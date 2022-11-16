@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 
@@ -39,9 +40,12 @@ namespace Reaper
             Console.Title = $"Reaper v{String.Format("0.##",versionNumber.ToString())}" ;
             //generate default language file
             
-            string tree = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\";
+            string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
+            string tree = $"{baseLoc}\\langFiles\\";
+            string cfgLoc = $"{baseLoc}\\config.cfg";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
             TranslationMaker.defaultFileMaker();
+            string[] config = Inputs.configReader(cfgLoc);
                 
             //select language or implement new language
             string[] langValue = null;
@@ -110,7 +114,7 @@ namespace Reaper
             {
                 city = Console.ReadLine();
             }
-            string json = APICall(city, langPreferenceShort, unitPreference);
+            string json = APICall(city, langPreferenceShort, unitPreference, config[0]);
             //deserialize Json response
             JsonResponseDeserializer.root wetterDaten = JsonSerializer.Deserialize<JsonResponseDeserializer.root>(json);
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
@@ -123,7 +127,7 @@ namespace Reaper
                 Console.Write("\nEnter your mail address (e.g. user@example.com)\n>");
                 string recipient = Console.ReadLine();
                 Console.WriteLine("trying to send mail");
-                if (Outputs.MailOutput(recipient, langValue[15], content, langValue) == true)
+                if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config[1], config[2], config[3], int.Parse(config[4])) == true)
                 {
                     Console.WriteLine("Mail sent successfully");
                     Console.WriteLine("Weather data powered by openweathermap.org");
@@ -144,7 +148,7 @@ namespace Reaper
         }
         //}
 
-        public static String APICall(String city, String langPreferenceShort, String unitPreference)
+        public static String APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
         {
             //Use default system proxy settings
             IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
@@ -152,8 +156,8 @@ namespace Reaper
             WebClient client = new WebClient { Proxy = defaultWebProxy };
 
             //build API Call url
-            string APIKey = "5c8b34a70ea8a6ba8a5d56ece90adda4";
-            string url = $"https://api.openweathermap.org/data/2.5/weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}";
+            string key = APIKey;
+            string url = $"https://api.openweathermap.org/data/2.5/weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={key}";
 
             // GET
             string json = client.DownloadString(url);
