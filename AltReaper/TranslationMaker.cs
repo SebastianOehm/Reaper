@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.Metrics;
+﻿
 
-namespace AltReaper
+namespace Reaper
 {
     internal class TranslationMaker
     {

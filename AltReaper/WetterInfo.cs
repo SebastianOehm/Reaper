@@ -1,4 +1,4 @@
-﻿namespace AltReaper
+﻿namespace Reaper
 {
     public static class JsonResponseDeserializer
     {

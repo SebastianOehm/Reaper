@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 
-namespace AltReaper
+namespace Reaper
 {
     internal class Outputs
     {

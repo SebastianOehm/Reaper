@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Runtime.Intrinsics.X86;
 using System.Text.Json;
 
 
@@ -29,7 +28,7 @@ using System.Text.Json;
 22  mailSuccessMessage
 */
 
-namespace AltReaper
+namespace Reaper
 {
     public static class Program
     {
