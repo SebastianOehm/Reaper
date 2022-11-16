@@ -3,7 +3,7 @@ using System.Runtime.Intrinsics.X86;
 using System.Text.Json;
 
 
-/* LineByLineTranslationFileInstructions
+/* LineByLineTranslationFileInstructions W = Word  number=line index
 0   ShortLanguageCode (not a query)
 1   Enter unit preference Query
 2   W metric
