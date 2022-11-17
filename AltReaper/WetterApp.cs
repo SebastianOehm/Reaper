@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Reflection.Metadata.Ecma335;
+using System.Text.Json;
 
 
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
@@ -35,9 +36,10 @@ namespace Reaper
         public static void Main(String[] args)
         {
             //Set window title to Reaper.versionName
-            double versionNumber = 0.6;
-            Console.Title = $"Reaper v{String.Format("0.##", versionNumber.ToString())}";
-
+            string appName = "Reaper";
+            double versionNumber = 0.7;
+            string title = $"{appName} v{versionNumber.ToString().Replace(',', '.')}";
+            Console.Title = title;
             //generate default structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\";
