@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
@@ -46,7 +45,6 @@ namespace Reaper
             string cfgLoc = $"{baseLoc}\\config.cfg";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
             TranslationMaker.defaultFileMaker();
-            string[] config = Inputs.configReader(cfgLoc);
 
             //select language or implement new language
             string[] langValue = null;
@@ -83,6 +81,17 @@ namespace Reaper
                 Console.WriteLine($"{langValue[5]} Using default language (English)");
             }
             string langPreferenceShort = langValue[0];
+
+            //cfg getter
+            if (!File.Exists(cfgLoc))
+            {
+                Console.Write("\nEnter your APIKey\n>");
+                string apiKey = Console.ReadLine();
+                File.WriteAllText(cfgLoc, apiKey);
+            }
+            
+            string [] config = File.ReadAllLines(cfgLoc);
+            
             //gets unit preference
             string unitPreference = null;
 
@@ -120,29 +129,7 @@ namespace Reaper
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
 
             //mail option
-            Console.Write($"\n{langValue[19]} ({langValue[16]},{langValue[17]})\n>");
-            string answer = Console.ReadLine().ToLower();
-            if (answer == langValue[16])
-            {
-                Console.Write($"\n{langValue[20]}\n>");
-                string recipient = Console.ReadLine();
-                if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config[1], config[2], config[3], int.Parse(config[4]), config[5]) == true)
-                {
-                    Console.WriteLine($"{langValue[21]}");
-                    Console.WriteLine("Weather data powered by openweathermap.org");
-                    Console.WriteLine("Mail powered by htmlemail.io & WetterSense.de");
-                }
-                else { throw new Exception(); }
-            }
-            else
-            {
-                if (answer == langValue[17])
-                {
-                    Console.WriteLine("Goodbye");
-                    Console.ReadKey();
-                    Environment.Exit(1);
-                }
-            }
+            Helper.MailOption(langValue, config, content, cfgLoc);
         }
     }
 }

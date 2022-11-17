@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -40,6 +41,39 @@ namespace Reaper
             // GET
             string json = client.DownloadString(url);
             return json;
+        }
+
+        public static bool configGen (String cfgLoc, int cfgOptCount, String[] langValue)
+        {
+            if (File.Exists(cfgLoc) && File.ReadAllLines(cfgLoc).Length == cfgOptCount)
+            {
+                return false;
+            }
+
+            Console.Write("\nEnter your APIKey\n>");
+            string apiKey = Console.ReadLine();
+            Console.Write("\nEnter the mail address which you want use to send mails\n>");
+            string senderMail = Console.ReadLine();
+            Console.Write("\nEnter the password for the mail (won't be shown), then press enter\n>");
+            string senderMailPassword = null;
+            while (true)
+            {
+                var key = System.Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                break;
+                senderMailPassword += key.KeyChar;
+            }
+            Console.Write("\nEnter the smtp host domain\"\n>");
+            string hostDomain = Console.ReadLine();
+            Console.Write("\nEnter the smtp port Number\n>");
+            string portNumber = Console.ReadLine();
+            Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue[17]}\" (without quotes) \n>");
+            string BCC = Console.ReadLine();
+
+            string[] cfgData = {apiKey,senderMail,senderMailPassword,hostDomain,portNumber,BCC};
+            File.WriteAllLines(cfgLoc, cfgData);
+
+            return true;
         }
     }
 }

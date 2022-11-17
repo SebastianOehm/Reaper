@@ -48,7 +48,7 @@ namespace Reaper
         public static bool MailOutput(String recipient, String subjectLine, String[] content, String[] langValue, String sender, String pwd, String host, int port, String archiveBcc)
         {
             //salutation
-            Console.Write($"\nEnter your name or type \"no\" to not be addressed (without quotes) \n>");
+            Console.Write($"\n{langValue[20]}\n>");
             string name = Console.ReadLine();
             if (name == langValue[17]) { name = ""; }
 
@@ -70,7 +70,11 @@ namespace Reaper
             //Set Recipient
             mailMessage.To.Add(recipient);
             //Set bcc for analysis
-            mailMessage.Bcc.Add(archiveBcc);
+            if(archiveBcc == langValue[17]) { } 
+            else 
+            {
+                mailMessage.Bcc.Add(archiveBcc); 
+            }
 
             //sending
             try
