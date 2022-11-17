@@ -81,12 +81,9 @@ namespace Reaper
             Console.Write("\nMail sent successfully\n>");
             string mailSuccessMessage = Console.ReadLine();
 
-
-
-
             //creating array from inputs
             Console.WriteLine("Constructing file");
-            string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no };
+            string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no, mailWanted, mailAddressQuery, nameOr, mailSuccessMessage };
 
             //Writing array to file
             Console.WriteLine("Writing to file");
@@ -134,10 +131,9 @@ namespace Reaper
             string mailAddressQuery = "Enter your mail address";
             string nameOr = "Enter your name or type \"no\" to not be addressed (without quotes)";
             string mailSuccessMessage = "Mail sent successfully";
-
-
+            
+            //generate file output
             string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no, mailWanted, mailAddressQuery, nameOr, mailSuccessMessage };
-
             File.WriteAllLines(futureFilePath, fileInput);
             if (File.Exists(futureFilePath)) { success = true; }
 

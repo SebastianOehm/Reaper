@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 
 /* LineByLineTranslationFileInstructions W = Word  number=line index
@@ -25,8 +23,7 @@ using System.Text.Json;
 18  mailWanted
 19  mailAddressQuery
 20  nameOr
-21  mailPoweredBy
-22  mailSuccessMessage
+21  mailSuccessMessage
 */
 
 namespace Reaper
@@ -36,17 +33,17 @@ namespace Reaper
         public static void Main(String[] args)
         {
             //ConsoleWindowTitle
-            double versionNumber = 0.5;
-            Console.Title = $"Reaper v{String.Format("0.##",versionNumber.ToString())}" ;
+            double versionNumber = 0.6;
+            Console.Title = $"Reaper v{String.Format("0.##", versionNumber.ToString())}";
+
             //generate default language file
-            
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\";
             string cfgLoc = $"{baseLoc}\\config.cfg";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
             TranslationMaker.defaultFileMaker();
             string[] config = Inputs.configReader(cfgLoc);
-                
+
             //select language or implement new language
             string[] langValue = null;
             Console.Write("\nPlease either input your desired language or input \"new\" to implement another one. (without quotes)\n>");
@@ -59,32 +56,32 @@ namespace Reaper
                     string langName = Console.ReadLine();
                     if (TranslationMaker.newFileMaker(langName) == true)
                     {
-                        langValue = langHandler(langName);
+                        langValue = Inputs.langHandler(langName);
                     }
                 }
                 else
                 {
                     try
                     {
-                        langValue = langHandler(langPreferenceLong);
+                        langValue = Inputs.langHandler(langPreferenceLong);
                     }
                     catch
                     {
                         //resort to default on fail
-                        langValue = langHandler("default");
+                        langValue = Inputs.langHandler("default");
                         Console.WriteLine($"{langValue[5]} Using default language (English)");
                     }
                 }
             }
             else
             {
-                langValue = langHandler("default");
+                langValue = Inputs.langHandler("default");
                 Console.WriteLine($"{langValue[5]} Using default language (English)");
             }
             string langPreferenceShort = langValue[0];
             //gets unit preference
             string unitPreference = null;
-            
+
             while (!langValue.Contains(unitPreference))
             {
                 try
@@ -104,7 +101,7 @@ namespace Reaper
                     continue;
                 }
             }
-           
+
             //Build data for APICall bool APISuccess = false;
             if (unitPreference == langValue[2]) { unitPreference = "metric"; } else { unitPreference = "imperial"; }
             Console.Write($"\n{langValue[4]}\n>");
@@ -113,22 +110,21 @@ namespace Reaper
             {
                 city = Console.ReadLine();
             }
-            string json = APICall(city, langPreferenceShort, unitPreference, config[0]);
+            string json = Inputs.APICall(city, langPreferenceShort, unitPreference, config[0]);
             //deserialize Json response
             JsonResponseDeserializer.root wetterDaten = JsonSerializer.Deserialize<JsonResponseDeserializer.root>(json);
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
 
             //mail option
-            Console.Write($"\nDo you want this as a mail? ({langValue[16]},{langValue[17]})\n>");
+            Console.Write($"\n{langValue[19]} ({langValue[16]},{langValue[17]})\n>");
             string answer = Console.ReadLine().ToLower();
             if (answer == langValue[16])
             {
-                Console.Write("\nEnter your mail address (e.g. user@example.com)\n>");
+                Console.Write($"\n{langValue[20]}\n>");
                 string recipient = Console.ReadLine();
-                Console.WriteLine("trying to send mail");
                 if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config[1], config[2], config[3], int.Parse(config[4])) == true)
                 {
-                    Console.WriteLine("Mail sent successfully");
+                    Console.WriteLine($"{langValue[21]}");
                     Console.WriteLine("Weather data powered by openweathermap.org");
                     Console.WriteLine("Mail powered by htmlemail.io & WetterSense.de");
                 }
@@ -141,34 +137,8 @@ namespace Reaper
                     Console.WriteLine("Goodbye");
                     Console.ReadKey();
                     Environment.Exit(1);
-
                 }
             }
         }
-        //}
-
-        public static String APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
-        {
-            //Use default system proxy settings
-            IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
-            defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
-            WebClient client = new WebClient { Proxy = defaultWebProxy };
-
-            //build API Call url
-            string key = APIKey;
-            string url = $"https://api.openweathermap.org/data/2.5/weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={key}";
-
-            // GET
-            string json = client.DownloadString(url);
-            return json;
-        }
-
-        public static String[] langHandler(String langPreferenceLong)
-        {
-            //importing selected language file
-            string[] langValue = File.ReadAllLines($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.txt");
-            return langValue;
-        }
-        
     }
 }
