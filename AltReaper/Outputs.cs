@@ -45,7 +45,7 @@ namespace Reaper
             Console.WriteLine(String.Join("\r\n", cArray));
             return cArray;
         }
-        public static bool MailOutput(String recipient, String subjectLine, String[] content, String[] langValue, String sender, String pwd, String host, int port)
+        public static bool MailOutput(String recipient, String subjectLine, String[] content, String[] langValue, String sender, String pwd, String host, int port, String archiveBcc)
         {
             //salutation
             Console.Write($"\nEnter your name or type \"no\" to not be addressed (without quotes) \n>");
@@ -59,7 +59,7 @@ namespace Reaper
                 EnableSsl = true,
             };
 
-            //Smtp content
+            //Set Smtp content
             var mailMessage = new MailMessage()
             {
                 From = new MailAddress(sender),
@@ -69,8 +69,8 @@ namespace Reaper
             
             //Set Recipient
             mailMessage.To.Add(recipient);
-            //blind copy for analysis
-            mailMessage.Bcc.Add("info@WetterSense.de");
+            //Set bcc for analysis
+            mailMessage.Bcc.Add(archiveBcc);
 
             //sending
             try

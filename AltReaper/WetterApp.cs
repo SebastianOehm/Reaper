@@ -1,29 +1,31 @@
 ﻿using System.Text.Json;
 
 
-/* LineByLineTranslationFileInstructions W = Word  number=line index
-0   ShortLanguageCode (not a query)
-1   Enter unit preference Query
-2   W metric
-3   W imperial
-4   Enter name of place for which you want weather data
-5   invalidInput
-6   pressEnterContinue
-7   errorFound
-8   theWeatherIn
-9   W temperature
-10  W lowestTemperature
-11  W highestTemperature
-12  W description
-13  LocalSystemTime
-14  Time at destination
-15  Your weather Info (formal)
-16  W yes
-17  W no
-18  mailWanted
-19  mailAddressQuery
-20  nameOr
-21  mailSuccessMessage
+/* LineByLineTranslationFileInstructions | W = Word | number=line index
+  
+0       ShortLanguageCode (not a query)
+1       Enter unit preference
+2   W   metric
+3   W   imperial
+4       Enter name of place for which you want weather data
+5       invalidInput
+6       pressEnterContinue
+7       errorFound
+8       theWeatherIn
+9   W   temperature
+10  W   lowestTemperature
+11  W   highestTemperature
+12  W   description
+13      LocalSystemTime
+14      Time at destination
+15      Your weather Info (formal)
+16  W   yes
+17  W   no
+18      mailWanted
+19      mailAddressQuery
+20      nameOr
+21      mailSuccessMessage
+ 
 */
 
 namespace Reaper
@@ -32,11 +34,11 @@ namespace Reaper
     {
         public static void Main(String[] args)
         {
-            //ConsoleWindowTitle
+            //Set window title to Reaper.versionName
             double versionNumber = 0.6;
             Console.Title = $"Reaper v{String.Format("0.##", versionNumber.ToString())}";
 
-            //generate default language file
+            //generate default structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\";
             string cfgLoc = $"{baseLoc}\\config.cfg";
@@ -122,7 +124,7 @@ namespace Reaper
             {
                 Console.Write($"\n{langValue[20]}\n>");
                 string recipient = Console.ReadLine();
-                if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config[1], config[2], config[3], int.Parse(config[4])) == true)
+                if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config[1], config[2], config[3], int.Parse(config[4]), config[5]) == true)
                 {
                     Console.WriteLine($"{langValue[21]}");
                     Console.WriteLine("Weather data powered by openweathermap.org");
