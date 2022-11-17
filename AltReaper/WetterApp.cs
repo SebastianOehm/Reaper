@@ -82,7 +82,6 @@ namespace Reaper
                 Console.WriteLine($"{langValue[5]} Using default language (English)");
             }
             string langPreferenceShort = langValue[0];
-            //while (keyPressed.Key != ConsoleKey.Escape) { 
             //gets unit preference
             string unitPreference = null;
             
