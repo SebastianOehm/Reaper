@@ -39,7 +39,8 @@ namespace Reaper
             double versionNumber = 0.7;
             string title = $"{appName} v{versionNumber.ToString().Replace(',', '.')}";
             Console.Title = title;
-            //generate default structure and langFile
+
+            //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\";
             string cfgLoc = $"{baseLoc}\\config.cfg";
@@ -63,10 +64,7 @@ namespace Reaper
                 }
                 else
                 {
-                    try
-                    {
-                        langValue = Inputs.langHandler(langPreferenceLong);
-                    }
+                    try { langValue = Inputs.langHandler(langPreferenceLong); }
                     catch
                     {
                         //resort to default on fail
@@ -89,12 +87,10 @@ namespace Reaper
                 string apiKey = Console.ReadLine();
                 File.WriteAllText(cfgLoc, apiKey);
             }
-            
             string [] config = File.ReadAllLines(cfgLoc);
             
             //gets unit preference
             string unitPreference = null;
-
             while (!langValue.Contains(unitPreference))
             {
                 try
@@ -108,22 +104,18 @@ namespace Reaper
                         while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
                     }
                 }
-                catch (Exception unitException)
-                {
-                    Console.WriteLine(langValue[7]);
-                    continue;
-                }
+                catch (Exception unitException){ Console.WriteLine(langValue[7]); continue; }
             }
 
-            //Build data for APICall
+            //Build data for API call
             if (unitPreference == langValue[2]) { unitPreference = "metric"; } else { unitPreference = "imperial"; }
             Console.Write($"\n{langValue[4]}\n>");
             string city = null;
-            while (String.IsNullOrEmpty(city))
-            {
-                city = Console.ReadLine();
-            }
+            while (String.IsNullOrEmpty(city)){ city = Console.ReadLine(); }
+
+            //make API call
             string json = Inputs.APICall(city, langPreferenceShort, unitPreference, config[0]);
+
             //deserialize Json response
             JsonResponseDeserializer.root wetterDaten = JsonSerializer.Deserialize<JsonResponseDeserializer.root>(json);
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);

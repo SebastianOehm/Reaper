@@ -82,7 +82,6 @@ namespace Reaper
             string mailSuccessMessage = Console.ReadLine();
 
             //creating array from inputs
-            Console.WriteLine("Constructing file");
             string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no, mailWanted, mailAddressQuery, nameOr, mailSuccessMessage };
 
             //Writing array to file
