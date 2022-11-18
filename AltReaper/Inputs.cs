@@ -45,10 +45,8 @@ namespace Reaper
 
         public static bool configGen (String cfgLoc, int cfgOptCount, String[] langValue, String[] config)
         {
-            if (File.Exists(cfgLoc) && File.ReadAllLines(cfgLoc).Length == cfgOptCount)
-            {
-                return false;
-            }
+            //checks if config file exists and if all lines have information
+            if (File.Exists(cfgLoc) && File.ReadAllLines(cfgLoc).Length == cfgOptCount) { return false; }
 
             string apiKey = config[0];
             Console.Write("\nEnter the mail address which you want use to send mails\n>");
