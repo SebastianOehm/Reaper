@@ -19,13 +19,13 @@ namespace Reaper
                 {
                     if (File.ReadAllLines(cfgLoc).Length != 6)
                     {
-                        Inputs.configGen(cfgLoc,cfgOptCount,langValue);
+                        Inputs.configGen(cfgLoc,cfgOptCount,langValue, config);
                         config = File.ReadAllLines(cfgLoc);
                         continue;
                     }
                     Console.Write($"\n{langValue[19]}\n>");
                     string recipient = Console.ReadLine();
-                    if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config[1], config[2], config[3], int.Parse(config[4]), config[5]) == true)
+                    if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config[1], config[2], config[3], int.Parse(config[4]), config[5]))
                     {
                         Console.WriteLine($"{langValue[21]}");
                         Console.WriteLine("Weather data powered by openweathermap.org");

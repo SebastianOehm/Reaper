@@ -43,18 +43,17 @@ namespace Reaper
             return json;
         }
 
-        public static bool configGen (String cfgLoc, int cfgOptCount, String[] langValue)
+        public static bool configGen (String cfgLoc, int cfgOptCount, String[] langValue, String[] config)
         {
             if (File.Exists(cfgLoc) && File.ReadAllLines(cfgLoc).Length == cfgOptCount)
             {
                 return false;
             }
 
-            Console.Write("\nEnter your APIKey\n>");
-            string apiKey = Console.ReadLine();
+            string apiKey = config[0];
             Console.Write("\nEnter the mail address which you want use to send mails\n>");
             string senderMail = Console.ReadLine();
-            Console.Write("\nEnter the password for the mail (won't be shown), then press enter\n>");
+            Console.Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
             string senderMailPassword = null;
             while (true)
             {

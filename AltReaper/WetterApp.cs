@@ -115,7 +115,7 @@ namespace Reaper
                 }
             }
 
-            //Build data for APICall bool APISuccess = false;
+            //Build data for APICall
             if (unitPreference == langValue[2]) { unitPreference = "metric"; } else { unitPreference = "imperial"; }
             Console.Write($"\n{langValue[4]}\n>");
             string city = null;
