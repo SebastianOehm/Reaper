@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using System.Security;
+using System.Net;
 
 
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
@@ -45,6 +47,15 @@ namespace Reaper
             string tree = $"{baseLoc}\\langFiles\\";
             string cfgLoc = $"{baseLoc}\\config.cfg";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
+            Console.Write("\nDo you want to enter supervisor mode? (yes, no)\n>");
+            string a = Console.ReadLine();
+            if (a == "yes")
+            {
+                Console.Write("\nEnter the supervisor password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
+                SecureString supervisorPwd = new NetworkCredential("", Helper.PasswordMaker()).SecurePassword;
+                Helper.SupervisorMode(supervisorPwd, appName, baseLoc);
+            }
+            else { Console.Write("Continuing in standard mode"); }
             TranslationMaker.defaultFileMaker();
 
             //select language or implement new language

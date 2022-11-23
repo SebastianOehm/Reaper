@@ -1,4 +1,8 @@
-﻿
+﻿using Renci.SshNet;
+using System.Security;
+using System.Net;
+using System.Text.RegularExpressions;
+
 namespace Reaper
 {
     internal class Helper
@@ -26,6 +30,7 @@ namespace Reaper
                         Console.WriteLine($"{langValue[21]}");
                         Console.WriteLine("Weather data powered by openweathermap.org");
                         Console.WriteLine("Mail powered by htmlemail.io & WetterSense.de");
+                        Console.WriteLine("Reaper by WetterSenseDev");
                     }
                     else { throw new Exception(); }
                     partSuccess = true;
@@ -43,7 +48,7 @@ namespace Reaper
         }
         public static string PasswordMaker()
         {
-            string password = null;
+            string password = "";
             while (true)
             {
                 ConsoleKeyInfo keyPressed = Console.ReadKey(true);
@@ -64,6 +69,37 @@ namespace Reaper
                 }
             }
             return password;
+        }
+        public static void SupervisorMode(SecureString supervisorPwd, String appName, string directoryLoc)
+        {
+            string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
+            SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", new NetworkCredential("", supervisorPwd).Password);
+            sftp.Connect();
+            Stream configLoc = File.Create($"{directoryLoc}\\config.cfg");
+            sftp.DownloadFile(@"\config.cfg", configLoc);
+            var langFileList = sftp.ListDirectory("/langFiles/").ToList();
+
+            System.Collections.IEnumerable list = sftp.ListDirectory("/langFiles/", null);
+            System.Collections.IEnumerator enumerator = list.GetEnumerator();
+            Renci.SshNet.Sftp.SftpFile sftpFile;
+            string name;
+            List<string> files = new List<string>();
+            while (enumerator.MoveNext())
+            {
+                sftpFile = (Renci.SshNet.Sftp.SftpFile)enumerator.Current;
+                name = sftpFile.Name;
+                files.Add(name);
+            }
+            
+            Regex myRegex = new Regex(@"^[a-z]+Text\.txt$");
+            List<string> downloadList = files.Where(f => myRegex.IsMatch(f)).ToList();
+            foreach (string str in downloadList)
+            {
+                Stream langFileLoc = File.Create($"{directoryLoc}\\langFiles\\{str}");
+                sftp.DownloadFile($"/{str}", langFileLoc);
+            }
+            sftp.Disconnect();
+
         }
     }
 }
