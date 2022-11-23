@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
+using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 
 namespace Reaper
 {
     internal class Helper
     {
-        public static void MailOption (String[] langValue, String[] config, String[] content, String cfgLoc)
+        public static void MailOption(String[] langValue, String[] config, String[] content, String cfgLoc)
         {
             int cfgOptCount = 5;
             Console.Write($"\n{langValue[18]} ({langValue[16]},{langValue[17]})\n>");
@@ -19,7 +22,7 @@ namespace Reaper
                 {
                     if (File.ReadAllLines(cfgLoc).Length != 6)
                     {
-                        Inputs.configGen(cfgLoc,cfgOptCount,langValue, config);
+                        Inputs.configGen(cfgLoc, cfgOptCount, langValue, config);
                         config = File.ReadAllLines(cfgLoc);
                         continue;
                     }
@@ -44,6 +47,34 @@ namespace Reaper
                     Environment.Exit(1);
                 }
             }
+        }
+        public SecureString Password()
+        {
+            var password = new SecureString();
+            while (true)
+            {
+                ConsoleKeyInfo keyPressed = Console.ReadKey(true);
+                if (keyPressed.Key == ConsoleKey.Enter) { break; }
+
+                else if (keyPressed.Key == ConsoleKey.Backspace)
+                {
+                    if (password.Length > 0)
+                    {
+                        password.RemoveAt(password.Length - 1);
+                        Console.Write("\b \b");
+                    }
+                }
+                else if (keyPressed.KeyChar != '\u0000') // KeyChar == '\u0000' if the key pressed does not correspond to a printable character, e.g. F1, Pause-Break, etc
+                {
+                    password.AppendChar(keyPressed.KeyChar);
+                    Console.Write("*");
+                }
+            }
+            return password;
+        }
+        void FilePolice()
+        {
+
         }
     }
 }

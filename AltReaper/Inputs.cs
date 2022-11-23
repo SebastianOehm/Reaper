@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Security;
 using System.Text;
 
 /*config structure
@@ -52,14 +53,7 @@ namespace Reaper
             Console.Write("\nEnter the mail address which you want use to send mails\n>");
             string senderMail = Console.ReadLine();
             Console.Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
-            string senderMailPassword = null;
-            while (true)
-            {
-                var key = System.Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
-                break;
-                senderMailPassword += key.KeyChar;
-            }
+            Securestring senderMailPassword = Helper.Password();
             Console.Write("\nEnter the smtp host domain\"\n>");
             string hostDomain = Console.ReadLine();
             Console.Write("\nEnter the smtp port Number\n>");
