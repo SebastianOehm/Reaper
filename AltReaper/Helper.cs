@@ -72,9 +72,5 @@ namespace Reaper
             }
             return password;
         }
-        void FilePolice()
-        {
-
-        }
     }
 }
