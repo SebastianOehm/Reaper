@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Security.Cryptography;
-using System.Runtime.InteropServices;
-
+﻿
 namespace Reaper
 {
     internal class Helper
@@ -48,9 +41,9 @@ namespace Reaper
                 }
             }
         }
-        public SecureString Password()
+        public static string PasswordMaker()
         {
-            var password = new SecureString();
+            string password = null;
             while (true)
             {
                 ConsoleKeyInfo keyPressed = Console.ReadKey(true);
@@ -60,13 +53,13 @@ namespace Reaper
                 {
                     if (password.Length > 0)
                     {
-                        password.RemoveAt(password.Length - 1);
+                        password.Remove(password.Length - 1);
                         Console.Write("\b \b");
                     }
                 }
                 else if (keyPressed.KeyChar != '\u0000') // KeyChar == '\u0000' if the key pressed does not correspond to a printable character, e.g. F1, Pause-Break, etc
                 {
-                    password.AppendChar(keyPressed.KeyChar);
+                    password.Append(keyPressed.KeyChar);
                     Console.Write("*");
                 }
             }

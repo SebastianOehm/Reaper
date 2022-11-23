@@ -53,7 +53,7 @@ namespace Reaper
             Console.Write("\nEnter the mail address which you want use to send mails\n>");
             string senderMail = Console.ReadLine();
             Console.Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
-            Securestring senderMailPassword = Helper.Password();
+            string senderMailPassword = Helper.PasswordMaker();
             Console.Write("\nEnter the smtp host domain\"\n>");
             string hostDomain = Console.ReadLine();
             Console.Write("\nEnter the smtp port Number\n>");
