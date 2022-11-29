@@ -1,5 +1,4 @@
 ﻿
-
 namespace Reaper
 {
     internal class TranslationMaker

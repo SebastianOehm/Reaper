@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Reaper
 {
+    
     internal class Helper
     {
         public static void MailOption(String[] langValue, String[] config, String[] content, String cfgLoc)
@@ -60,7 +61,8 @@ namespace Reaper
                         Console.Write("\b \b");
                     }
                 }
-                // make non unicode chars invalid (like function keys)
+
+                // make non-unicode chars (like function keys) invalid
                 else if (keyPressed.KeyChar != '\u0000')
                 {
                     password += keyPressed.KeyChar;
@@ -94,7 +96,7 @@ namespace Reaper
                 files.Add(name);
             }
 
-            //getting language files
+            //getting available language files
             Regex myRegex = new Regex(@"^[a-z]+Text\.txt$");
             List<string> downloadList = files.Where(f => myRegex.IsMatch(f)).ToList();
             foreach (string str in downloadList)

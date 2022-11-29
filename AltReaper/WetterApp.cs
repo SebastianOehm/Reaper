@@ -1,7 +1,4 @@
 ﻿using System.Text.Json;
-using System.Security;
-using System.Net;
-
 
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
   
@@ -38,7 +35,7 @@ namespace Reaper
         {
             //Set window title to Reaper.versionName
             string appName = "Reaper";
-            double versionNumber = 0.7;
+            double versionNumber = 0.8;
             string title = $"{appName} v{versionNumber.ToString().Replace(',', '.')}";
             Console.Title = title;
 
