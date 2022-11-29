@@ -58,25 +58,25 @@ namespace Reaper
                 {
                     if (password.Length > 0)
                     {
-                        password.Remove(password.Length - 1);
+                        password = password.Remove(password.Length - 1);
                         Console.Write("\b \b");
                     }
                 }
                 else if (keyPressed.KeyChar != '\u0000') // KeyChar == '\u0000' if the key pressed does not correspond to a printable character, e.g. F1, Pause-Break, etc
                 {
-                    password.Append(keyPressed.KeyChar);
+                    password += keyPressed.KeyChar;
                     Console.Write("*");
                 }
             }
             return password;
         }
-        public static void SupervisorMode(SecureString supervisorPwd, String appName, string directoryLoc)
+        public static void SupervisorMode(String supervisorPwd, String appName, string directoryLoc)
         {
             string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
-            SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", new NetworkCredential("", supervisorPwd).Password);
+            SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", supervisorPwd);
             sftp.Connect();
             Stream configLoc = File.Create($"{directoryLoc}\\config.cfg");
-            sftp.DownloadFile(@"\config.cfg", configLoc);
+            sftp.DownloadFile(@"/config.cfg", configLoc);
             var langFileList = sftp.ListDirectory("/langFiles/").ToList();
 
             System.Collections.IEnumerable list = sftp.ListDirectory("/langFiles/", null);
@@ -96,7 +96,7 @@ namespace Reaper
             foreach (string str in downloadList)
             {
                 Stream langFileLoc = File.Create($"{directoryLoc}\\langFiles\\{str}");
-                sftp.DownloadFile($"/{str}", langFileLoc);
+                sftp.DownloadFile($"/langFiles/{str}", langFileLoc);
             }
             sftp.Disconnect();
 

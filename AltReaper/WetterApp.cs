@@ -52,7 +52,7 @@ namespace Reaper
             if (a == "yes")
             {
                 Console.Write("\nEnter the supervisor password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
-                SecureString supervisorPwd = new NetworkCredential("", Helper.PasswordMaker()).SecurePassword;
+                string supervisorPwd = Helper.PasswordMaker();
                 Helper.SupervisorMode(supervisorPwd, appName, baseLoc);
             }
             else { Console.Write("Continuing in standard mode"); }
