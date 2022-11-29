@@ -1,6 +1,4 @@
 ﻿using Renci.SshNet;
-using System.Security;
-using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Reaper
@@ -9,7 +7,7 @@ namespace Reaper
     {
         public static void MailOption(String[] langValue, String[] config, String[] content, String cfgLoc)
         {
-            int cfgOptCount = 5;
+            int cfgOptCount = 6;
             Console.Write($"\n{langValue[18]} ({langValue[16]},{langValue[17]})\n>");
             string answer = Console.ReadLine().ToLower();
             if (answer == langValue[16])
@@ -17,7 +15,7 @@ namespace Reaper
                 bool partSuccess = false;
                 while (!partSuccess)
                 {
-                    if (File.ReadAllLines(cfgLoc).Length != 6)
+                    if (File.ReadAllLines(cfgLoc).Length != cfgOptCount)
                     {
                         Inputs.configGen(cfgLoc, cfgOptCount, langValue, config);
                         config = File.ReadAllLines(cfgLoc);
@@ -62,7 +60,8 @@ namespace Reaper
                         Console.Write("\b \b");
                     }
                 }
-                else if (keyPressed.KeyChar != '\u0000') // KeyChar == '\u0000' if the key pressed does not correspond to a printable character, e.g. F1, Pause-Break, etc
+                // make non unicode chars invalid (like function keys)
+                else if (keyPressed.KeyChar != '\u0000')
                 {
                     password += keyPressed.KeyChar;
                     Console.Write("*");
@@ -72,13 +71,17 @@ namespace Reaper
         }
         public static void SupervisorMode(String supervisorPwd, String appName, string directoryLoc)
         {
-            string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
+            //setting login credentials
             SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", supervisorPwd);
             sftp.Connect();
+
+            //getting config
             Stream configLoc = File.Create($"{directoryLoc}\\config.cfg");
             sftp.DownloadFile(@"/config.cfg", configLoc);
+            configLoc.Close();
+            
+            //search for available language files
             var langFileList = sftp.ListDirectory("/langFiles/").ToList();
-
             System.Collections.IEnumerable list = sftp.ListDirectory("/langFiles/", null);
             System.Collections.IEnumerator enumerator = list.GetEnumerator();
             Renci.SshNet.Sftp.SftpFile sftpFile;
@@ -90,16 +93,17 @@ namespace Reaper
                 name = sftpFile.Name;
                 files.Add(name);
             }
-            
+
+            //getting language files
             Regex myRegex = new Regex(@"^[a-z]+Text\.txt$");
             List<string> downloadList = files.Where(f => myRegex.IsMatch(f)).ToList();
             foreach (string str in downloadList)
             {
                 Stream langFileLoc = File.Create($"{directoryLoc}\\langFiles\\{str}");
                 sftp.DownloadFile($"/langFiles/{str}", langFileLoc);
+                langFileLoc.Close();
             }
             sftp.Disconnect();
-
         }
     }
 }
