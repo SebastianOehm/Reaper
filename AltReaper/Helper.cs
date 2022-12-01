@@ -31,7 +31,7 @@ namespace Reaper
                         {
                             Console.WriteLine($"{langValue[21]}");
                             Console.WriteLine("Weather data powered by openweathermap.org");
-                            Console.WriteLine("Mail powered by htmlemail.io & WetterSense.de");
+                            Console.WriteLine($"Mail powered by htmlemail.io & {config[1].Split('@')[1]}");
                             Console.WriteLine("Reaper by WetterSenseDev");
                         }
                         else { throw new Exception(); }
