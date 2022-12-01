@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net;
-using System.Security;
-using System.Text;
+﻿using System.Net;
 
-/*config structure
+/*
+ * config structure
  * APIKey
  * senderAddress
  * password
@@ -17,7 +12,7 @@ namespace Reaper
 {
     internal class Inputs
     {
-        public static string[] configReader (string cfgLoc) 
+        public static String[] configReader (String cfgLoc) 
         {
             string[] config = File.ReadAllLines(cfgLoc);
             return config;
@@ -55,7 +50,7 @@ namespace Reaper
             Console.Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
             string senderMailPassword = Helper.PasswordMaker();
             Console.Write("\nEnter the smtp host domain\"\n>");
-            string hostDomain = Console.ReadLine();
+            string hostDomain = Console.ReadLine(); 
             Console.Write("\nEnter the smtp port Number\n>");
             string portNumber = Console.ReadLine();
             Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue[17]}\" (without quotes) \n>");
@@ -63,7 +58,6 @@ namespace Reaper
 
             string[] cfgData = {apiKey,senderMail,senderMailPassword,hostDomain,portNumber,BCC};
             File.WriteAllLines(cfgLoc, cfgData);
-
             return true;
         }
     }

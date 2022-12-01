@@ -10,38 +10,42 @@ namespace Reaper
         {
             int cfgOptCount = 6;
             Console.Write($"\n{langValue[18]} ({langValue[16]},{langValue[17]})\n>");
-            string answer = Console.ReadLine().ToLower();
-            if (answer == langValue[16])
-            {
-                bool partSuccess = false;
-                while (!partSuccess)
+            string answer ="";
+            while (answer != langValue[16] | answer != langValue[17])
+            { 
+                answer = Console.ReadLine().ToLower();
+                if (answer == langValue[16])
                 {
-                    if (File.ReadAllLines(cfgLoc).Length != cfgOptCount)
+                    bool partSuccess = false;
+                    while (!partSuccess)
                     {
-                        Inputs.configGen(cfgLoc, cfgOptCount, langValue, config);
-                        config = File.ReadAllLines(cfgLoc);
-                        continue;
+                        if (File.ReadAllLines(cfgLoc).Length != cfgOptCount)
+                        {
+                            Inputs.configGen(cfgLoc, cfgOptCount, langValue, config);
+                            config = File.ReadAllLines(cfgLoc);
+                            continue;
+                        }
+                        Console.Write($"\n{langValue[19]}\n>");
+                        string recipient = Console.ReadLine();
+                        if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config))
+                        {
+                            Console.WriteLine($"{langValue[21]}");
+                            Console.WriteLine("Weather data powered by openweathermap.org");
+                            Console.WriteLine("Mail powered by htmlemail.io & WetterSense.de");
+                            Console.WriteLine("Reaper by WetterSenseDev");
+                        }
+                        else { throw new Exception(); }
+                        partSuccess = true;
                     }
-                    Console.Write($"\n{langValue[19]}\n>");
-                    string recipient = Console.ReadLine();
-                    if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config))
-                    {
-                        Console.WriteLine($"{langValue[21]}");
-                        Console.WriteLine("Weather data powered by openweathermap.org");
-                        Console.WriteLine("Mail powered by htmlemail.io & WetterSense.de");
-                        Console.WriteLine("Reaper by WetterSenseDev");
-                    }
-                    else { throw new Exception(); }
-                    partSuccess = true;
                 }
-            }
-            else
-            {
-                if (answer == langValue[17])
+                else
                 {
-                    Console.WriteLine("Goodbye");
-                    Console.ReadKey();
-                    Environment.Exit(1);
+                    if (answer == langValue[17])
+                    {
+                        Console.WriteLine("Goodbye");
+                        Console.ReadKey();
+                        Environment.Exit(1);
+                    }
                 }
             }
         }
