@@ -67,7 +67,8 @@ namespace Reaper
                     string langName = Console.ReadLine();
                     if (TranslationMaker.newFileMaker(langName) == true)
                     {
-                        langValue = Inputs.langHandler(langName);
+                        //langValue = Inputs.langHandler(langName);
+                        configJson.langVal langValueJson = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName);
                     }
                 }
                 else
@@ -76,7 +77,8 @@ namespace Reaper
                     catch
                     {
                         //resort to default on fail
-                        langValue = Inputs.langHandler("default");
+                        configJson.langVal langValueJson = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName);
+                        configJson.langVal langValueJson = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName);
                         Console.WriteLine($"{langValue[5]} Using default language (English)");
                     }
                 }

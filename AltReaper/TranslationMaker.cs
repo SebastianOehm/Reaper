@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json;
+
 namespace Reaper
 {
     internal class TranslationMaker
@@ -80,13 +82,28 @@ namespace Reaper
             Console.Write("\nMail sent successfully\n>");
             string mailSuccessMessage = Console.ReadLine();
 
+            var jsonLangVal = new configJson.langVal
+            {
+                shortLanguage = shortLanguage, unitQuery = unitQuery, metric = metric, 
+                imperial = imperial, nameOfCity = nameOfCity, invalidInput = invalidInput, 
+                pressEnterContinue = pressEnterContinue, errorMessage = errorMessage, 
+                theWeatherIn = theWeatherIn, temp = temp, lowestTemp = lowestTemp, 
+                highestTemp = highestTemp, description = description, localSystemTime = localSystemTime, 
+                timeAtDestination = timeAtDestination, yourWeatherInfo = yourWeatherInfo, 
+                no = no, mailWanted = mailWanted, mailAddressQuery = mailAddressQuery,
+                nameOr = nameOr, mailSuccessMessage = mailSuccessMessage,
+            };
             //creating array from inputs
-            string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no, mailWanted, mailAddressQuery, nameOr, mailSuccessMessage };
+            //string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no, mailWanted, mailAddressQuery, nameOr, mailSuccessMessage };
 
             //Writing array to file
             Console.WriteLine("Writing to file");
-            File.WriteAllLines(futureFilePath, fileInput);
-            if (File.Exists(futureFilePath)) { success = true; } //checks if Filewriting worked
+            //File.WriteAllLines(futureFilePath, fileInput);
+            string futureJsonFilePath = futureFilePath.Remove(futureFilePath.Length - 3);
+            string jsonVal = JsonSerializer.Serialize(jsonLangVal);
+            File.WriteAllText(futureJsonFilePath, jsonVal);
+            //if (File.Exists(futureFilePath)) { success = true; } //checks if Filewriting worked
+            if (File.Exists(futureJsonFilePath)) { success = true; }
             Console.Clear();
 
             if (success)
@@ -107,6 +124,7 @@ namespace Reaper
             string currentUserDesktopPath = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\Reaper\\langFiles\\";
             string futureFilePath = currentUserDesktopPath + langName.ToLower() + "Text.txt";
 
+            /*
             string shortLanguage = "en";
             string unitQuery = "Enter the name of the unit system you want to use";
             string metric = "metric";
@@ -129,12 +147,41 @@ namespace Reaper
             string mailAddressQuery = "Enter your mail address";
             string nameOr = "Enter your name or type \"no\" to not be addressed (without quotes)";
             string mailSuccessMessage = "Mail sent successfully";
-            
-            //generate file output
-            string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no, mailWanted, mailAddressQuery, nameOr, mailSuccessMessage };
-            File.WriteAllLines(futureFilePath, fileInput);
-            if (File.Exists(futureFilePath)) { success = true; }
+            */
 
+            var jsonLangValDef = new configJson.langVal
+            {
+                shortLanguage = "en",
+                unitQuery = "Enter the name of the unit system you want to use",
+                metric = "metric",
+                imperial = "imperial",
+                nameOfCity = "Enter the name of the city which you want weather data of.",
+                invalidInput = "Invalid input.",
+                pressEnterContinue = "Press Enter to continue.",
+                errorMessage = "Error found.",
+                theWeatherIn = "The weather in",
+                temp = "temperature",
+                lowestTemp = "lowest temperature",
+                highestTemp = "highest temperature",
+                description = "description",
+                localSystemTime = "local system time",
+                timeAtDestination = "time at destination",
+                yourWeatherInfo = "your weather info",
+                yes = "yes",
+                no = "no",
+                mailWanted = "Do you want this as a mail?",
+                mailAddressQuery = "Enter your mail address",
+                nameOr = "Enter your name or type \"no\" to not be addressed (without quotes)",
+                mailSuccessMessage = "Mail sent successfully"
+            };
+            string jsonValDef = JsonSerializer.Serialize(jsonLangValDef);
+            string futureJsonFilePath = futureFilePath.Remove(futureFilePath.Length - 3);
+            File.WriteAllText(futureJsonFilePath, jsonValDef);
+            //generate file output
+            //string[] fileInput = { shortLanguage, unitQuery, metric, imperial, nameOfCity, invalidInput, pressEnterContinue, errorMessage, theWeatherIn, temp, lowestTemp, highestTemp, description, localSystemTime, timeAtDestination, yourWeatherInfo, yes, no, mailWanted, mailAddressQuery, nameOr, mailSuccessMessage };
+            //File.WriteAllLines(futureFilePath, fileInput);
+            //if (File.Exists(futureFilePath)) { success = true; }
+            if (File.Exists(futureJsonFilePath)) { success = true; }
             if (success)
             {
                 langCreated = true;
@@ -144,7 +191,10 @@ namespace Reaper
                 Console.WriteLine("-------------------------");
                 foreach (string l in fullySupportedLanguages)
                 {
-                    if (File.Exists($"{currentUserDesktopPath}{l}Text.txt")) { Console.Write(char.ToUpper(l[0]) + l.Substring(1) + ", "); }
+                    if (/*File.Exists($"{currentUserDesktopPath}{l}Text.txt") ^*/ File.Exists($"{currentUserDesktopPath}{l}Text.json")) 
+                    { 
+                        Console.Write(char.ToUpper(l[0]) + l.Substring(1) + ", "); 
+                    }
                 }
                 Console.Write("default\n-------------------------\n");
             }

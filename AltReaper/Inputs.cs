@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net;
-using System.Security;
-using System.Text;
+﻿using System.Net;
 using System.Text.Json;
 
 /*
@@ -24,10 +18,12 @@ namespace Reaper
             string[] config = File.ReadAllLines(cfgLoc);
             return config;
         }
-        public static String[] langHandler(String langPreferenceLong)
+        public static String langHandler(String langPreferenceLong)
         {
             //importing selected language file
-            string[] langValue = File.ReadAllLines($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.txt");
+            //string[] langValue = File.ReadAllLines($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.txt");
+            string langValue = File.ReadAllText($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.json");
+
             return langValue;
         }
         public static String APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
@@ -63,7 +59,7 @@ namespace Reaper
             Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue[17]}\" (without quotes) \n>");
             string BCC = Console.ReadLine();
 
-            /*
+            
             var configJson = new configJson.root
             {
                 apiKey = apiKey,
@@ -76,7 +72,8 @@ namespace Reaper
             string jsonConfig = JsonSerializer.Serialize(configJson);
             string jsonCfgLoc = $"{cfgLoc.Remove(cfgLoc.Length - 3)}json";
             File.WriteAllText(jsonCfgLoc, jsonConfig);
-            */
+            return true;
+            
 
             string[] cfgData = {apiKey,senderMail,senderMailPassword,hostDomain,portNumber,BCC};
             File.WriteAllLines(cfgLoc, cfgData);
