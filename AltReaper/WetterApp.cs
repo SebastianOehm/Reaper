@@ -4,7 +4,7 @@ using static Reaper.configJson;
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
   
 0       ShortLanguageCode (not a query)
-1       Enter unit preference
+1       Enter   preference
 2   W   metric
 3   W   imperial
 4       Enter name of place for which you want weather data
@@ -109,14 +109,16 @@ namespace Reaper
             configJson.root config = JsonSerializer.Deserialize<configJson.root>(File.ReadAllText(cfgLoc));
             
             //gets unit preference
-            string unitPreference = null;
+            string unitPreference = "";
             bool suc = false;
             while (suc != true)
             {
                 Console.Write($"\n{langValue.unitQuery} ({langValue.metric},{langValue.imperial})\n>");
                 unitPreference = Console.ReadLine().ToLower();
                 if (unitPreference == langValue.metric ^ unitPreference == langValue.imperial)
-                { 
+                {
+                    if (unitPreference == langValue.metric) { unitPreference = "metric"; }
+                    if (unitPreference == langValue.imperial) { unitPreference = "imperial"; }
                     break;
                 }
                 Console.WriteLine(langValue.invalidInput);
