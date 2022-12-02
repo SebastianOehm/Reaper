@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Security;
 using System.Text;
+using System.Text.Json;
 
 /*config structure
  * APIKey
@@ -61,9 +62,23 @@ namespace Reaper
             Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue[17]}\" (without quotes) \n>");
             string BCC = Console.ReadLine();
 
+            /*
+            var configJson = new configJson.root
+            {
+                apiKey = apiKey,
+                senderMail = senderMail,
+                senderMailPassword = senderMailPassword,
+                hostDomain = hostDomain,
+                portNumber = int.Parse(portNumber),
+                bcc = BCC
+            };
+            string jsonConfig = JsonSerializer.Serialize(configJson);
+            string jsonCfgLoc = $"{cfgLoc.Remove(cfgLoc.Length - 3)}json";
+            File.WriteAllText(jsonCfgLoc, jsonConfig);
+            */
+
             string[] cfgData = {apiKey,senderMail,senderMailPassword,hostDomain,portNumber,BCC};
             File.WriteAllLines(cfgLoc, cfgData);
-
             return true;
         }
     }
