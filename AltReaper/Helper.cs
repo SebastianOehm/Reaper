@@ -1,38 +1,38 @@
 ﻿using Renci.SshNet;
 using System.Text.RegularExpressions;
+using System.Text.Json;
 
 namespace Reaper
 {
     
     internal class Helper
     {
-        public static void MailOption(String[] langValue, String[] config, String[] content, String cfgLoc)
+        public static void MailOption(configJson.langVal langValue, configJson.root config, String[] content, String cfgLoc, String[] devData)
         {
-            int cfgOptCount = 6;
-            Console.Write($"\n{langValue[18]} ({langValue[16]},{langValue[17]})\n>");
-            string answer ="";
-            while (answer != langValue[16] | answer != langValue[17])
+            Console.Write($"\n{langValue.mailWanted} ({langValue.yes},{langValue.no})\n>");
+            string answer =null;
+            while (answer != langValue.yes && answer != langValue.no )
             { 
                 answer = Console.ReadLine().ToLower();
-                if (answer == langValue[16])
+                if (answer == langValue.yes)
                 {
                     bool partSuccess = false;
                     while (!partSuccess)
                     {
-                        if (File.ReadAllLines(cfgLoc).Length != cfgOptCount)
+                        bool problem = cfgChecker(config);
+                        if (problem == true)
                         {
-                            Inputs.configGen(cfgLoc, cfgOptCount, langValue, config);
-                            config = File.ReadAllLines(cfgLoc);
-                            continue;
+                            Inputs.configGen(cfgLoc, problem, langValue, config);
+                            config = JsonSerializer.Deserialize<configJson.root>(File.ReadAllText(cfgLoc));
                         }
-                        Console.Write($"\n{langValue[19]}\n>");
+                        Console.Write($"\n{langValue.mailAddressQuery}\n>");
                         string recipient = Console.ReadLine();
-                        if (Outputs.MailOutput(recipient, langValue[15], content, langValue, config))
+                        if (Outputs.MailOutput(recipient, langValue.yourWeatherInfo, content, langValue, config))
                         {
-                            Console.WriteLine($"{langValue[21]}");
+                            Console.WriteLine($"{langValue.mailSuccessMessage}");
                             Console.WriteLine("Weather data powered by openweathermap.org");
-                            Console.WriteLine($"Mail powered by htmlemail.io & {config[1].Split('@')[1]}");
-                            Console.WriteLine("Reaper by WetterSenseDev");
+                            Console.WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
+                            Console.WriteLine($"{devData[0]} by {devData[1]}");
                         }
                         else { throw new Exception(); }
                         partSuccess = true;
@@ -40,7 +40,7 @@ namespace Reaper
                 }
                 else
                 {
-                    if (answer == langValue[17])
+                    if (answer == langValue.no)
                     {
                         Console.WriteLine("Goodbye");
                         Console.ReadKey();
@@ -82,8 +82,8 @@ namespace Reaper
             sftp.Connect();
 
             //getting config
-            Stream configLoc = File.Create($"{directoryLoc}\\config.cfg");
-            sftp.DownloadFile(@"/config.cfg", configLoc);
+            Stream configLoc = File.Create($"{directoryLoc}\\config.json");
+            sftp.DownloadFile(@"/config.json", configLoc);
             configLoc.Close();
             
             //search for available language files
@@ -101,7 +101,7 @@ namespace Reaper
             }
 
             //getting available language files
-            Regex myRegex = new Regex(@"^[a-z]+Text\.txt$");
+            Regex myRegex = new Regex(@"^[a-z]+Text\.json$");
             List<string> downloadList = files.Where(f => myRegex.IsMatch(f)).ToList();
             foreach (string str in downloadList)
             {
@@ -110,6 +110,16 @@ namespace Reaper
                 langFileLoc.Close();
             }
             sftp.Disconnect();
+        }
+        public static bool cfgChecker(configJson.root config)
+        {       
+            bool[] bools = { String.IsNullOrEmpty(config.apiKey), String.IsNullOrEmpty(config.senderMail), String.IsNullOrEmpty(config.senderMailPassword), String.IsNullOrEmpty(config.hostDomain), String.IsNullOrEmpty(config.portNumber), false, String.IsNullOrEmpty(config.bcc) };
+            try { if (int.Parse(config.portNumber) < 0 && int.Parse(config.portNumber) > 65535) { bools[5] = true; } }
+            catch { return true; }
+            bool problem = false;
+            // if all values of bools are true
+            if (bools.Any(x => x) == true) { problem = true; }
+            return problem;
         }
     }
 }

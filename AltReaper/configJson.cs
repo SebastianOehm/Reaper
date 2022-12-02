@@ -1,7 +1,7 @@
 ﻿
 namespace Reaper
 {
-    internal class configJson
+    internal static class configJson
     {
         public class root
         {
@@ -10,7 +10,7 @@ namespace Reaper
 
             public string senderMailPassword { get; set; }
             public string hostDomain { get; set; }
-            public int portNumber { get; set; }
+            public string portNumber { get; set; }
             public string bcc { get; set; }
         }
         public class langVal

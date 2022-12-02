@@ -8,22 +8,21 @@ using System.Text.Json;
  * password
  * host
  * port
+ * bcc
 */
 namespace Reaper
 {
     internal class Inputs
     {
-        public static String[] configReader (String cfgLoc) 
+        public static String configReader (String cfgLoc) 
         {
-            string[] config = File.ReadAllLines(cfgLoc);
+            string config = File.ReadAllText(cfgLoc);
             return config;
         }
         public static String langHandler(String langPreferenceLong)
         {
             //importing selected language file
-            //string[] langValue = File.ReadAllLines($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.txt");
             string langValue = File.ReadAllText($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.json");
-
             return langValue;
         }
         public static String APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
@@ -42,12 +41,12 @@ namespace Reaper
             return json;
         }
 
-        public static bool configGen (String cfgLoc, int cfgOptCount, String[] langValue, String[] config)
+        public static bool configGen (String cfgLoc, bool status, configJson.langVal langValue, configJson.root config)
         {
             //checks if config file exists and if all lines have information
-            if (File.Exists(cfgLoc) && File.ReadAllLines(cfgLoc).Length == cfgOptCount) { return false; }
+            if (File.Exists(cfgLoc) && Helper.cfgChecker(config) == false) { return true; }
 
-            string apiKey = config[0];
+            string apiKey = config.apiKey;
             Console.Write("\nEnter the mail address which you want use to send mails\n>");
             string senderMail = Console.ReadLine();
             Console.Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
@@ -56,27 +55,20 @@ namespace Reaper
             string hostDomain = Console.ReadLine(); 
             Console.Write("\nEnter the smtp port Number\n>");
             string portNumber = Console.ReadLine();
-            Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue[17]}\" (without quotes) \n>");
+            Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue.no}\" (without quotes) \n>");
             string BCC = Console.ReadLine();
 
-            
-            var configJson = new configJson.root
+            var json = new configJson.root
             {
                 apiKey = apiKey,
                 senderMail = senderMail,
                 senderMailPassword = senderMailPassword,
                 hostDomain = hostDomain,
-                portNumber = int.Parse(portNumber),
+                portNumber = (portNumber),
                 bcc = BCC
             };
-            string jsonConfig = JsonSerializer.Serialize(configJson);
-            string jsonCfgLoc = $"{cfgLoc.Remove(cfgLoc.Length - 3)}json";
-            File.WriteAllText(jsonCfgLoc, jsonConfig);
-            return true;
-            
-
-            string[] cfgData = {apiKey,senderMail,senderMailPassword,hostDomain,portNumber,BCC};
-            File.WriteAllLines(cfgLoc, cfgData);
+            string configRaw = JsonSerializer.Serialize(json);
+            File.WriteAllText(cfgLoc, configRaw);
             return true;
         }
     }

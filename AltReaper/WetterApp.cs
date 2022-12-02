@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using static Reaper.configJson;
 
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
   
@@ -34,15 +35,16 @@ namespace Reaper
         public static void Main(String[] args)
         {
             //Set window title to Reaper.versionName
-            string appName = "Reaper";
-            double versionNumber = 0.8;
-            string title = $"{appName} v{versionNumber.ToString().Replace(',', '.')}";
+            string appName = "Reaper", devName = "WetterSenseDev";
+            string[] devData = { appName, devName };
+            string versionNumber = "0.8.2";
+            string title = $"{appName} v{versionNumber}";
             Console.Title = title;
 
             //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\";
-            string cfgLoc = $"{baseLoc}\\config.cfg";
+            string cfgLoc = $"{baseLoc}\\config.json";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
             Console.Write("\nDo you want to enter supervisor mode? (yes, no)\n>");
             string a = Console.ReadLine();
@@ -56,82 +58,86 @@ namespace Reaper
             TranslationMaker.defaultFileMaker();
 
             //select language or implement new language
-            string[] langValue = null;
+            //string[] langValue = null;
             Console.Write("\nPlease either input your desired language or input \"new\" to implement another one. (without quotes)\n>");
             string langPreferenceLong = Console.ReadLine().ToLower();
-            if (!String.IsNullOrEmpty(langPreferenceLong))
+            configJson.langVal langValue = null;
+            if (langPreferenceLong == "new")
             {
-                if (langPreferenceLong == "new")
+                Console.WriteLine("Please input the name of the language you want to implement");
+                string langName = Console.ReadLine();
+                if (TranslationMaker.newFileMaker(langName) == true)
                 {
-                    Console.WriteLine("Please input the name of the language you want to implement");
-                    string langName = Console.ReadLine();
-                    if (TranslationMaker.newFileMaker(langName) == true)
-                    {
-                        //langValue = Inputs.langHandler(langName);
-                        configJson.langVal langValueJson = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName);
-                    }
-                }
-                else
-                {
-                    try { langValue = Inputs.langHandler(langPreferenceLong); }
-                    catch
-                    {
-                        //resort to default on fail
-                        configJson.langVal langValueJson = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName);
-                        configJson.langVal langValueJson = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName);
-                        Console.WriteLine($"{langValue[5]} Using default language (English)");
-                    }
+                    //langValue = Inputs.langHandler(langName);
+                    langValue = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName));
                 }
             }
             else
             {
-                langValue = Inputs.langHandler("default");
-                Console.WriteLine($"{langValue[5]} Using default language (English)");
+                try { langValue = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langPreferenceLong)); }
+                catch
+                {
+                    //resort to default on fail
+                    langValue = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler("default"));
+                        
+                    Console.WriteLine($"{langValue.invalidInput} Using default language (English)");
+                }
             }
-            string langPreferenceShort = langValue[0];
+            string langPreferenceShort = langValue.shortLanguage;
 
             //cfg getter
+            configJson.root test = null;
+            try { test = JsonSerializer.Deserialize<configJson.root>(File.ReadAllText(cfgLoc)); }
+            catch { File.Delete(cfgLoc); }
+            test = null;
             if (!File.Exists(cfgLoc))
             {
                 Console.Write("\nEnter your APIKey\n>");
                 string apiKey = Console.ReadLine();
-                File.WriteAllText(cfgLoc, apiKey);
+                var tmp = new configJson.root
+                {
+                    apiKey = apiKey,
+                    senderMail = "",
+                    senderMailPassword = "",
+                    hostDomain = "",
+                    portNumber = "",
+                    bcc = ""
+                };
+                string v = JsonSerializer.Serialize(tmp);
+                File.WriteAllText(cfgLoc, v);
             }
-            string [] config = File.ReadAllLines(cfgLoc);
+            configJson.root config = JsonSerializer.Deserialize<configJson.root>(File.ReadAllText(cfgLoc));
             
             //gets unit preference
             string unitPreference = null;
-            while (!langValue.Contains(unitPreference))
+            bool suc = false;
+            while (suc != true)
             {
-                try
-                {
-                    Console.Write($"\n{langValue[1]} ({langValue[2]},{langValue[3]})\n>");
-                    unitPreference = Console.ReadLine().ToLower();
-                    if ((String.IsNullOrEmpty(unitPreference)) || (!langValue.Contains(unitPreference)))
-                    {
-                        Console.WriteLine(langValue[5]);
-                        Console.WriteLine(langValue[6]);
-                        while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
-                    }
+                Console.Write($"\n{langValue.unitQuery} ({langValue.metric},{langValue.imperial})\n>");
+                unitPreference = Console.ReadLine().ToLower();
+                if (unitPreference == langValue.metric ^ unitPreference == langValue.imperial)
+                { 
+                    break;
                 }
-                catch (Exception unitException){ Console.WriteLine(langValue[7]); continue; }
+                Console.WriteLine(langValue.invalidInput);
+                Console.WriteLine(langValue.pressEnterContinue);
+                while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
             }
 
             //Build data for API call
-            if (unitPreference == langValue[2]) { unitPreference = "metric"; } else { unitPreference = "imperial"; }
-            Console.Write($"\n{langValue[4]}\n>");
+            Console.Write($"\n{langValue.nameOfCity}\n>");
             string city = null;
             while (String.IsNullOrEmpty(city)){ city = Console.ReadLine(); }
 
             //make API call
-            string json = Inputs.APICall(city, langPreferenceShort, unitPreference, config[0]);
+            string json = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey);
 
             //deserialize Json response
             JsonResponseDeserializer.root wetterDaten = JsonSerializer.Deserialize<JsonResponseDeserializer.root>(json);
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
 
             //mail option
-            Helper.MailOption(langValue, config, content, cfgLoc);
+            Helper.MailOption(langValue, config, content, cfgLoc, devData);
         }
     }
 }
