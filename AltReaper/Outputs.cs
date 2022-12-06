@@ -5,7 +5,7 @@ namespace Reaper
 {
     internal class Outputs
     {
-        public static String[] WeatherOutput(JsonResponseDeserializer.root wetterDaten, String unitPreference, configJson.langVal langValue)
+        public static String[] WeatherOutput(JsonResponseDeserializer.root wetterDaten, String unitPreference, JsonHandling.langVal langValue)
         {
             //declare vars for cleaner output messages
             double tempValue = wetterDaten.main.temp;
@@ -45,7 +45,7 @@ namespace Reaper
             Console.WriteLine(String.Join("\r\n", cArray));
             return cArray;
         }
-        public static bool MailOutput(String recipient, String subjectLine, String[] content, configJson.langVal langValue, configJson.root config)
+        public static bool MailOutput(String recipient, String subjectLine, String[] content, JsonHandling.langVal langValue, JsonHandling.config config)
         {
             //Set salutation
             Console.Write($"\n{langValue.nameOr}\n>");

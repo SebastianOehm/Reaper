@@ -41,7 +41,7 @@ namespace Reaper
             return json;
         }
 
-        public static bool configGen (String cfgLoc, bool status, configJson.langVal langValue, configJson.root config)
+        public static bool configGen (String cfgLoc, bool status, JsonHandling.langVal langValue, JsonHandling.config config)
         {
             //checks if config file exists and if all lines have information
             if (File.Exists(cfgLoc) && Helper.cfgChecker(config) == false) { return true; }
@@ -58,7 +58,7 @@ namespace Reaper
             Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue.no}\" (without quotes) \n>");
             string BCC = Console.ReadLine();
 
-            var json = new configJson.root
+            var json = new JsonHandling.config
             {
                 apiKey = apiKey,
                 senderMail = senderMail,

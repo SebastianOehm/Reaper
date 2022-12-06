@@ -81,7 +81,7 @@ namespace Reaper
             Console.Write("\nMail sent successfully\n>");
             string mailSuccessMessage = Console.ReadLine();
 
-            var langVal = new configJson.langVal
+            var langVal = new JsonHandling.langVal
             {
                 shortLanguage = shortLanguage, unitQuery = unitQuery, metric = metric, 
                 imperial = imperial, nameOfCity = nameOfCity, invalidInput = invalidInput, 
@@ -118,7 +118,7 @@ namespace Reaper
             string currentUserDesktopPath = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\Reaper\\langFiles\\";
             string futureFilePath = currentUserDesktopPath + langName.ToLower() + "Text.json";
 
-            var langVal = new configJson.langVal
+            var langVal = new JsonHandling.langVal
             {
                 shortLanguage = "en",
                 unitQuery = "Enter the name of the unit system you want to use",

@@ -1,6 +1,4 @@
 ﻿using System.Text.Json;
-using static Reaper.configJson;
-
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
   
 0       ShortLanguageCode (not a query)
@@ -61,7 +59,7 @@ namespace Reaper
             //string[] langValue = null;
             Console.Write("\nPlease either input your desired language or input \"new\" to implement another one. (without quotes)\n>");
             string langPreferenceLong = Console.ReadLine().ToLower();
-            configJson.langVal langValue = null;
+            JsonHandling.langVal langValue = null;
             if (langPreferenceLong == "new")
             {
                 Console.WriteLine("Please input the name of the language you want to implement");
@@ -69,16 +67,16 @@ namespace Reaper
                 if (TranslationMaker.newFileMaker(langName) == true)
                 {
                     //langValue = Inputs.langHandler(langName);
-                    langValue = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langName));
+                    langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(langName));
                 }
             }
             else
             {
-                try { langValue = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler(langPreferenceLong)); }
+                try { langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(langPreferenceLong)); }
                 catch
                 {
                     //resort to default on fail
-                    langValue = JsonSerializer.Deserialize<configJson.langVal>(Inputs.langHandler("default"));
+                    langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler("default"));
                         
                     Console.WriteLine($"{langValue.invalidInput} Using default language (English)");
                 }
@@ -86,15 +84,15 @@ namespace Reaper
             string langPreferenceShort = langValue.shortLanguage;
 
             //cfg getter
-            configJson.root test = null;
-            try { test = JsonSerializer.Deserialize<configJson.root>(File.ReadAllText(cfgLoc)); }
+            JsonHandling.config test = null;
+            try { test = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc)); }
             catch { File.Delete(cfgLoc); }
             test = null;
             if (!File.Exists(cfgLoc))
             {
                 Console.Write("\nEnter your APIKey\n>");
                 string apiKey = Console.ReadLine();
-                var tmp = new configJson.root
+                var tmp = new JsonHandling.config
                 {
                     apiKey = apiKey,
                     senderMail = "",
@@ -106,7 +104,7 @@ namespace Reaper
                 string v = JsonSerializer.Serialize(tmp);
                 File.WriteAllText(cfgLoc, v);
             }
-            configJson.root config = JsonSerializer.Deserialize<configJson.root>(File.ReadAllText(cfgLoc));
+            JsonHandling.config config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
             
             //gets unit preference
             string unitPreference = "";

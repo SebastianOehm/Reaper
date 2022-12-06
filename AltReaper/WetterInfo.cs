@@ -1,6 +1,6 @@
 ﻿namespace Reaper
 {
-    public static class JsonResponseDeserializer
+    public static class JsonResponseDeserializer1
     {
         public class weather
         {

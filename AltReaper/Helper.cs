@@ -7,7 +7,7 @@ namespace Reaper
     
     internal class Helper
     {
-        public static void MailOption(configJson.langVal langValue, configJson.root config, String[] content, String cfgLoc, String[] devData)
+        public static void MailOption(JsonHandling.langVal langValue, JsonHandling.config config, String[] content, String cfgLoc, String[] devData)
         {
             Console.Write($"\n{langValue.mailWanted} ({langValue.yes},{langValue.no})\n>");
             string answer =null;
@@ -23,7 +23,7 @@ namespace Reaper
                         if (problem == true)
                         {
                             Inputs.configGen(cfgLoc, problem, langValue, config);
-                            config = JsonSerializer.Deserialize<configJson.root>(File.ReadAllText(cfgLoc));
+                            config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
                         }
                         Console.Write($"\n{langValue.mailAddressQuery}\n>");
                         string recipient = Console.ReadLine();
@@ -111,7 +111,7 @@ namespace Reaper
             }
             sftp.Disconnect();
         }
-        public static bool cfgChecker(configJson.root config)
+        public static bool cfgChecker(JsonHandling.config config)
         {       
             bool[] bools = { String.IsNullOrEmpty(config.apiKey), String.IsNullOrEmpty(config.senderMail), String.IsNullOrEmpty(config.senderMailPassword), String.IsNullOrEmpty(config.hostDomain), String.IsNullOrEmpty(config.portNumber), false, String.IsNullOrEmpty(config.bcc) };
             try { if (int.Parse(config.portNumber) < 0 && int.Parse(config.portNumber) > 65535) { bools[5] = true; } }
