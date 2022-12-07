@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
-  
+
 0       ShortLanguageCode (not a query)
 1       Enter   preference
 2   W   metric
@@ -23,7 +23,7 @@
 19      mailAddressQuery
 20      nameOr
 21      mailSuccessMessage
- 
+
 */
 
 namespace Reaper
@@ -33,20 +33,18 @@ namespace Reaper
         public static void Main(String[] args)
         {
             //Set window title to Reaper.versionName
-            string appName = "Reaper", devName = "WetterSenseDev";
+            string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.8.2";
             string[] devData = { appName, devName };
-            string versionNumber = "0.8.2";
             string title = $"{appName} v{versionNumber}";
             Console.Title = title;
 
             //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
-            string tree = $"{baseLoc}\\langFiles\\";
-            string cfgLoc = $"{baseLoc}\\config.json";
+            string tree = $"{baseLoc}\\langFiles\\", cfgLoc = $"{baseLoc}\\config.json";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
+            // ask if user wants to use supervisor mode
             Console.Write("\nDo you want to enter supervisor mode? (yes, no)\n>");
-            string a = Console.ReadLine();
-            if (a == "yes")
+            if (Console.ReadLine() == "yes")
             {
                 Console.Write("\nEnter the supervisor password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
                 string supervisorPwd = Helper.PasswordMaker();
@@ -66,7 +64,6 @@ namespace Reaper
                 string langName = Console.ReadLine();
                 if (TranslationMaker.newFileMaker(langName) == true)
                 {
-                    //langValue = Inputs.langHandler(langName);
                     langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(langName));
                 }
             }
@@ -108,8 +105,7 @@ namespace Reaper
             
             //gets unit preference
             string unitPreference = "";
-            bool suc = false;
-            while (suc != true)
+            while (true)
             {
                 Console.Write($"\n{langValue.unitQuery} ({langValue.metric},{langValue.imperial})\n>");
                 unitPreference = Console.ReadLine().ToLower();
@@ -128,10 +124,9 @@ namespace Reaper
             Console.Write($"\n{langValue.nameOfCity}\n>");
             string city = null;
             while (String.IsNullOrEmpty(city)){ city = Console.ReadLine(); }
-
             //make API call
             string json = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey);
-
+            
             //deserialize Json response
             JsonResponseDeserializer.root wetterDaten = JsonSerializer.Deserialize<JsonResponseDeserializer.root>(json);
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
