@@ -64,7 +64,7 @@ namespace Reaper
                 senderMail = senderMail,
                 senderMailPassword = senderMailPassword,
                 hostDomain = hostDomain,
-                portNumber = (portNumber),
+                portNumber = portNumber,
                 bcc = BCC
             };
             string configRaw = JsonSerializer.Serialize(json);

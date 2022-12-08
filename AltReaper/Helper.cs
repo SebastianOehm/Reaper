@@ -4,7 +4,6 @@ using System.Text.Json;
 
 namespace Reaper
 {
-    
     internal class Helper
     {
         public static void MailOption(JsonHandling.langVal langValue, JsonHandling.config config, String[] content, String cfgLoc, String[] devData)
@@ -56,7 +55,6 @@ namespace Reaper
             {
                 ConsoleKeyInfo keyPressed = Console.ReadKey(true);
                 if (keyPressed.Key == ConsoleKey.Enter) { break; }
-
                 else if (keyPressed.Key == ConsoleKey.Backspace)
                 {
                     if (password.Length > 0)
