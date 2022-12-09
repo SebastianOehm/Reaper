@@ -84,7 +84,6 @@ namespace Reaper
             JsonHandling.config test = null;
             try { test = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc)); }
             catch { File.Delete(cfgLoc); }
-            test = null;
             if (!File.Exists(cfgLoc))
             {
                 Console.Write("\nEnter your APIKey\n>");
@@ -98,8 +97,8 @@ namespace Reaper
                     portNumber = "",
                     bcc = ""
                 };
-                string v = JsonSerializer.Serialize(tmp);
-                File.WriteAllText(cfgLoc, v);
+                string tmpConfig = JsonSerializer.Serialize(tmp);
+                File.WriteAllText(cfgLoc, tmpConfig);
             }
             JsonHandling.config config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
             
