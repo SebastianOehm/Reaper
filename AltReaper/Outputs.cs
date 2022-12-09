@@ -22,7 +22,6 @@ namespace Reaper
             int timeZoneShiftFromUTC = wetterDaten.timezone / 3600;
             string timezoneUTC = null;
             DateTime locTime = DateTime.UtcNow.AddHours(timeZoneShiftFromUTC);
-            //var lastMeasured = DateTimeOffset.FromUnixTimeSeconds(wetterDaten.dt).DateTime.AddHours(timeZoneShiftFromUTC);
             int? timeDifference = localSystemTime.Hour - locTime.Hour;
             if (timeZoneShiftFromUTC >= 0) { timezoneUTC = $"UTC+{timeZoneShiftFromUTC}"; } else { timezoneUTC = $"UTC{timeZoneShiftFromUTC}"; }
             if (localSystemTime > locTime) { relativeTimeWord = "behind"; } else { relativeTimeWord = "ahead"; timeDifference = timeDifference * -1; } // replace with langValue index later
@@ -35,7 +34,6 @@ namespace Reaper
             string c1 = $"{langValue.theWeatherIn}: {wetterDaten.name}, {countryShort}";
             string c2 = $"{langValue.localSystemTime}: {localSystemTime}";
             string c3 = $"{langValue.timeAtDestination}: : {locTime} {timezoneUTC} ";
-            //Console.WriteLine($"Last measured: {lastMeasured}");
             string c4 = $"{wetterDaten.name} is {timeDifference}h {relativeTimeWord}.";
             string c5 = $"{langValue.temp}: {tempValue:0.#}°{unitSymbol}";
             string c6 = $"{langValue.lowestTemp}: {temp_minValue:0.#}°{unitSymbol}";

@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
-
 0       ShortLanguageCode (not a query)
 1       Enter   preference
 2   W   metric
@@ -23,7 +22,6 @@
 19      mailAddressQuery
 20      nameOr
 21      mailSuccessMessage
-
 */
 
 namespace Reaper
@@ -54,7 +52,6 @@ namespace Reaper
             TranslationMaker.defaultFileMaker();
 
             //select language or implement new language
-            //string[] langValue = null;
             Console.Write("\nPlease either input your desired language or input \"new\" to implement another one. (without quotes)\n>");
             string langPreferenceLong = Console.ReadLine().ToLower();
             JsonHandling.langVal langValue = null;
@@ -74,7 +71,6 @@ namespace Reaper
                 {
                     //resort to default on fail
                     langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler("default"));
-                        
                     Console.WriteLine($"{langValue.invalidInput} Using default language (English)");
                 }
             }

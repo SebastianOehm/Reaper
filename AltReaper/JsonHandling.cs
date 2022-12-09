@@ -46,8 +46,8 @@ namespace Reaper
         public class weather
         {
             public string description { get; set; }
-            //public string main { get; set; } //not used
-            //public string icon { get; set; } //not used in console
+            public string main { get; set; }
+            public string icon { get; set; }
         }
         public class main
         {
