@@ -7,39 +7,30 @@ namespace Reaper
     {
         public static String[] WeatherOutput(JsonResponseDeserializer.root wetterDaten, String unitPreference, JsonHandling.langVal langValue)
         {
-            //declare vars for cleaner output messages
-            double tempValue = wetterDaten.main.temp;
-            double temp_minValue = wetterDaten.main.temp_min;
-            double temp_maxValue = wetterDaten.main.temp_max;
-            string city = wetterDaten.name;
-            string countryShort = wetterDaten.sys.country;
+            
+            //time & timezones, units
             char unitSymbol;
-            string weatherDescription = wetterDaten.weather[0].description;
-
-            //time & timezones
-            string? relativeTimeWord = null;
             DateTime localSystemTime = DateTime.Now;
             int timeZoneShiftFromUTC = wetterDaten.timezone / 3600;
-            string timezoneUTC = null;
+            string timezoneUTC;
             DateTime locTime = DateTime.UtcNow.AddHours(timeZoneShiftFromUTC);
-            int? timeDifference = localSystemTime.Hour - locTime.Hour;
+            int timeDifference = localSystemTime.Hour - locTime.Hour;
             if (timeZoneShiftFromUTC >= 0) { timezoneUTC = $"UTC+{timeZoneShiftFromUTC}"; } else { timezoneUTC = $"UTC{timeZoneShiftFromUTC}"; }
-            if (localSystemTime > locTime) { relativeTimeWord = "behind"; } else { relativeTimeWord = "ahead"; timeDifference = timeDifference * -1; } // replace with langValue index later
-
             //metric/imperial output
             if (unitPreference == "metric") { unitSymbol = 'C'; } else { unitSymbol = 'F'; }
 
             //main output
-            string cs = "\n-------------------------------------\n";
-            string c1 = $"{langValue.theWeatherIn}: {wetterDaten.name}, {countryShort}";
-            string c2 = $"{langValue.localSystemTime}: {localSystemTime}";
-            string c3 = $"{langValue.timeAtDestination}: : {locTime} {timezoneUTC} ";
-            string c4 = $"{wetterDaten.name} is {timeDifference}h {relativeTimeWord}.";
-            string c5 = $"{langValue.temp}: {tempValue:0.#}°{unitSymbol}";
-            string c6 = $"{langValue.lowestTemp}: {temp_minValue:0.#}°{unitSymbol}";
-            string c7 = $"{langValue.highestTemp}: {temp_maxValue:0.#}°{unitSymbol}";
-            string c8 = $"{langValue.description}: {weatherDescription}";
-            string[] cArray = { cs, c1, c2, c3, c4, c5, c6, c7, c8, cs };
+            List<String> content = new();
+            string spacer = "\n-------------------------------------\n";
+            content.Add(spacer);
+            content.Add($"{langValue.theWeatherIn}: {wetterDaten.name}, {wetterDaten.sys.country}");
+            content.Add($"{langValue.localSystemTime}: {localSystemTime}");
+            content.Add($"{langValue.timeAtDestination}: : {locTime} {timezoneUTC} ");
+            content.Add($"{langValue.temp}: {wetterDaten.main.temp:0.#}°{unitSymbol}");
+            content.Add($"{langValue.lowestTemp}: {wetterDaten.main.temp_min:0.#}°{unitSymbol}");
+            content.Add($"{langValue.highestTemp}: {wetterDaten.main.temp_max:0.#}°{unitSymbol}");
+            content.Add($"{langValue.description}: {wetterDaten.weather[0].description}");
+            string[] cArray = content.ToArray();
             Console.WriteLine(String.Join("\r\n", cArray));
             return cArray;
         }
