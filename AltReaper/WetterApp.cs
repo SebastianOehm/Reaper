@@ -32,10 +32,11 @@ namespace Reaper
         public static void Main(String[] args)
         {
             //Set window title to Reaper.versionName
-            string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.8.2";
+            string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.8.5";
             string[] devData = { appName, devName };
-            string title = $"{appName} v{versionNumber}";
-            Console.Title = title;
+            Console.Title = $"{appName} v{versionNumber}";
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Clear();
             //test
             //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
@@ -46,15 +47,23 @@ namespace Reaper
             if (Console.ReadLine() == "yes")
             {
                 Console.Write("\nEnter the supervisor password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
-                string supervisorPwd = Helper.PasswordMaker();
-                Helper.SupervisorMode(supervisorPwd, appName, baseLoc);
+                while (true) 
+                { 
+                    try 
+                    { 
+                        string supervisorPwd = Helper.PasswordMaker();
+                        Helper.SupervisorMode(supervisorPwd, appName, baseLoc);
+                        break;
+                    }
+                    catch { Console.Write("\nError. Retype password\n>"); continue; }
+                }
             }
             else { Console.Write("Continuing in standard mode"); }
             TranslationMaker.defaultFileMaker();
 
             //select language or implement new language
             Console.Write("\nPlease either input your desired language or input \"new\" to implement another one. (without quotes)\n>");
-            string langPreferenceLong = Console.ReadLine().ToLower();
+            string langPreferenceLong = Console.ReadLine().ToLower(), spacer = "-------------------------";
             JsonHandling.langVal langValue = null;
             if (langPreferenceLong == "new")
             {
@@ -67,12 +76,30 @@ namespace Reaper
             }
             else
             {
-                try { langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(langPreferenceLong)); }
-                catch
+                if (langPreferenceLong.ToLower() == "english")
                 {
-                    //resort to default on fail
                     langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler("default"));
-                    Console.WriteLine($"{langValue.invalidInput} Using default language (English)");
+                    Console.WriteLine($"\n{spacer}\n");
+                    Console.WriteLine($"using {char.ToUpper(langPreferenceLong[0]) + langPreferenceLong.Substring(1)}");
+                    Console.WriteLine($"\n{spacer}");
+                }
+                else
+                {
+                    try 
+                    { 
+                        langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(langPreferenceLong));
+                        Console.WriteLine($"\n{spacer}\n");
+                        Console.WriteLine($"using {char.ToUpper(langPreferenceLong[0]) + langPreferenceLong.Substring(1)}");
+                        Console.WriteLine($"\n{spacer}");
+                    }
+                    catch
+                    {
+                        //resort to default on fail
+                        langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler("default"));
+                        Console.WriteLine($"\n{spacer}");
+                        Console.WriteLine($"{langValue.invalidInput} Using default language (English)");
+                        Console.WriteLine($"{spacer}");
+                    }
                 }
             }
             string langPreferenceShort = langValue.shortLanguage;

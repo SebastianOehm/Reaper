@@ -41,7 +41,10 @@ namespace Reaper
                 {
                     if (answer == langValue.no)
                     {
-                        Console.WriteLine("Goodbye");
+                        Console.WriteLine($"\nThank you for using {devData[0]}.");
+                        Console.WriteLine("Weather data powered by openweathermap.org");
+                        Console.WriteLine($"{devData[0]} by {devData[1]}");
+                        Console.WriteLine("Press any key to exit.");
                         Console.ReadKey();
                         Environment.Exit(1);
                     }

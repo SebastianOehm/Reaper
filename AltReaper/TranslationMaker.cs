@@ -13,8 +13,7 @@ namespace Reaper
 
             bool langCreated = false;
             bool success = false;
-            if (langName == "default" | String.IsNullOrEmpty(langName)) { return false; } //ensures only files with names that arent defaultText or Text are created
-
+            if (langName.ToLower() == "default" | String.IsNullOrEmpty(langName) | langName.ToLower() == "english") { return false; } //ensures only files with names that arent defaultText or Text are created
             //Creates file if not existant or user confirms that they want to
             if (File.Exists(futureFilePath))
             {
