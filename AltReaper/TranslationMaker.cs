@@ -112,36 +112,23 @@ namespace Reaper
         {
             string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
             string langName = "default";
-            bool langCreated = false;
-            bool success = false;
+            bool langCreated = false, success = false;
 
             string currentUserDesktopPath = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\Reaper\\langFiles\\";
             string futureFilePath = currentUserDesktopPath + langName.ToLower() + "Text.json";
 
             var langVal = new JsonHandling.langVal
             {
-                shortLanguage = "en",
-                unitQuery = "Enter the name of the unit system you want to use",
-                metric = "metric",
-                imperial = "imperial",
+                shortLanguage = "en", unitQuery = "Enter the name of the unit system you want to use",
+                metric = "metric", imperial = "imperial", errorMessage = "Error found.", no = "no",
                 nameOfCity = "Enter the name of the city which you want weather data of.",
-                invalidInput = "Invalid input.",
-                pressEnterContinue = "Press Enter to continue.",
-                errorMessage = "Error found.",
-                theWeatherIn = "The weather in",
-                temp = "temperature",
-                lowestTemp = "lowest temperature",
-                highestTemp = "highest temperature",
-                description = "description",
-                localSystemTime = "local system time",
-                timeAtDestination = "time at destination",
-                yourWeatherInfo = "your weather info",
-                yes = "yes",
-                no = "no",
-                mailWanted = "Do you want this as a mail?",
-                mailAddressQuery = "Enter your mail address",
+                invalidInput = "Invalid input.", pressEnterContinue = "Press Enter to continue.",
+                theWeatherIn = "The weather in", temp = "temperature", lowestTemp = "lowest temperature",
+                highestTemp = "highest temperature", description = "description", yes = "yes",
+                timeAtDestination = "time at destination", yourWeatherInfo = "your weather info",
+                mailWanted = "Do you want this as a mail?", mailAddressQuery = "Enter your mail address",
                 nameOr = "Enter your name or type \"no\" to not be addressed (without quotes)",
-                mailSuccessMessage = "Mail sent successfully"
+                mailSuccessMessage = "Mail sent successfully", localSystemTime= "local system time"
             };
             //generate file output
             string val = JsonSerializer.Serialize(langVal);;

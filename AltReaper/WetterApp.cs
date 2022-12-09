@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
 0       ShortLanguageCode (not a query)
 1       Enter   preference
@@ -119,11 +120,10 @@ namespace Reaper
             Console.Write($"\n{langValue.nameOfCity}\n>");
             string city = null;
             while (String.IsNullOrEmpty(city)){ city = Console.ReadLine(); }
+
             //make API call
-            string json = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey);
-            
-            //deserialize Json response
-            JsonResponseDeserializer.root wetterDaten = JsonSerializer.Deserialize<JsonResponseDeserializer.root>(json);
+            WeatherResponse.root wetterDaten = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey).Result;
+
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
 
             //mail option

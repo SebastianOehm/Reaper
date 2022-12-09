@@ -5,7 +5,7 @@ namespace Reaper
 {
     internal class Outputs
     {
-        public static String[] WeatherOutput(JsonResponseDeserializer.root wetterDaten, String unitPreference, JsonHandling.langVal langValue)
+        public static String[] WeatherOutput(WeatherResponse.root wetterDaten, String unitPreference, JsonHandling.langVal langValue)
         {
             
             //time & timezones, units
@@ -30,6 +30,7 @@ namespace Reaper
             content.Add($"{langValue.lowestTemp}: {wetterDaten.main.temp_min:0.#}°{unitSymbol}");
             content.Add($"{langValue.highestTemp}: {wetterDaten.main.temp_max:0.#}°{unitSymbol}");
             content.Add($"{langValue.description}: {wetterDaten.weather[0].description}");
+            content.Add(spacer);
             string[] cArray = content.ToArray();
             Console.WriteLine(String.Join("\r\n", cArray));
             return cArray;

@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using Renci.SshNet;
+using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 /*
@@ -25,20 +27,22 @@ namespace Reaper
             string langValue = File.ReadAllText($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.json");
             return langValue;
         }
-        public static String APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
+        public static async Task<WeatherResponse.root> APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
         {
             //Use default system proxy settings
             IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
             defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
-            WebClient client = new WebClient { Proxy = defaultWebProxy };
+            HttpClientHandler handler = new()
+            {
+                Proxy = defaultWebProxy,
+            };
+            HttpClient client = new()
+            {
+                BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"),
+            };
 
-            //build API Call url
-            string key = APIKey;
-            string url = $"https://api.openweathermap.org/data/2.5/weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={key}";
-
-            // GET
-            string json = client.DownloadString(url);
-            return json;
+            var jsonResponse = await client.GetFromJsonAsync<WeatherResponse.root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}");
+            return jsonResponse;
         }
 
         public static bool configGen (String cfgLoc, bool status, JsonHandling.langVal langValue, JsonHandling.config config)

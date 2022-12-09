@@ -9,7 +9,7 @@ namespace Reaper
         public static void MailOption(JsonHandling.langVal langValue, JsonHandling.config config, String[] content, String cfgLoc, String[] devData)
         {
             Console.Write($"\n{langValue.mailWanted} ({langValue.yes},{langValue.no})\n>");
-            string answer =null;
+            string answer = null;
             while (answer != langValue.yes && answer != langValue.no )
             { 
                 answer = Console.ReadLine().ToLower();
