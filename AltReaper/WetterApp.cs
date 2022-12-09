@@ -35,7 +35,7 @@ namespace Reaper
             string[] devData = { appName, devName };
             string title = $"{appName} v{versionNumber}";
             Console.Title = title;
-
+            //test
             //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\", cfgLoc = $"{baseLoc}\\config.json";
