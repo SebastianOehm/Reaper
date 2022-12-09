@@ -1,6 +1,12 @@
 ﻿using Renci.SshNet;
 using System.Text.RegularExpressions;
 using System.Text.Json;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Net;
+using System;
+using System.Globalization;
+using static Reaper.JsonHandling;
 
 namespace Reaper
 {
@@ -28,10 +34,7 @@ namespace Reaper
                         string recipient = Console.ReadLine();
                         if (Outputs.MailOutput(recipient, langValue.yourWeatherInfo, content, langValue, config))
                         {
-                            Console.WriteLine($"{langValue.mailSuccessMessage}");
-                            Console.WriteLine("Weather data powered by openweathermap.org");
-                            Console.WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
-                            Console.WriteLine($"{devData[0]} by {devData[1]}");
+                            Closer(true, devData, config, langValue);
                         }
                         else { throw new Exception(); }
                         partSuccess = true;
@@ -41,12 +44,7 @@ namespace Reaper
                 {
                     if (answer == langValue.no)
                     {
-                        Console.WriteLine($"\nThank you for using {devData[0]}.");
-                        Console.WriteLine("Weather data powered by openweathermap.org");
-                        Console.WriteLine($"{devData[0]} by {devData[1]}");
-                        Console.WriteLine("Press any key to exit.");
-                        Console.ReadKey();
-                        Environment.Exit(1);
+                        Closer(false, devData);
                     }
                 }
             }
@@ -121,6 +119,67 @@ namespace Reaper
             // if all values of bools are true
             if (bools.Any(x => x) == true) { problem = true; }
             return problem;
+        }
+        public static bool DeviceIsOnline()
+        {
+            bool isOnline = false;
+            Ping ping1 = new();
+            Ping ping2 = new();
+            PingReply reply1 = ping1.Send("1.1.1.1");
+            PingReply reply2 = ping2.Send("8.8.8.8");
+            if ( reply1.Status == IPStatus.Success | reply2.Status == IPStatus.Success)
+            {
+                isOnline = true;
+            }
+            
+            return isOnline;
+        }
+        public static bool APIsOnline()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            bool isOnline = false;
+            IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
+            defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
+            try
+            {
+                // Creates an HttpWebRequest for the specified URL. 
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.openweathermap.org/data/2.5/weather?q=London");
+                // Sends the HttpWebRequest and waits for a response.
+                request.Proxy = defaultWebProxy;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                response.Close();
+
+            }
+            catch (WebException e)
+            {
+                if( e.Message.Equals("The remote server returned an error: (401) Unauthorized.", StringComparison.InvariantCultureIgnoreCase)) { isOnline = true; }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\nThe following Exception was raised : {0}", e.Message);
+            }
+            return isOnline;
+        }
+        public static void Closer (bool mailSuccess, String[] devData)
+        {
+            Console.WriteLine($"\nThank you for using {devData[0]}!");
+            Console.WriteLine("Weather data powered by openweathermap.org");
+            Console.WriteLine($"{devData[0]} by {devData[1]}");
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+            Environment.Exit(0);
+        }
+        public static void Closer(bool mailSuccess, String[] devData, JsonHandling.config config, JsonHandling.langVal langValue)
+        {
+            Console.WriteLine($"{langValue.mailSuccessMessage}");
+            Console.WriteLine($"\nThank you for using {devData[0]}!");
+            Console.WriteLine("Weather data powered by openweathermap.org");
+            Console.WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
+            Console.WriteLine($"{devData[0]} by {devData[1]}");
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+            Environment.Exit(0);
         }
     }
 }

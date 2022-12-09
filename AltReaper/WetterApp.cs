@@ -37,7 +37,19 @@ namespace Reaper
             Console.Title = $"{appName} v{versionNumber}";
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Clear();
-            //test
+
+            if (Helper.DeviceIsOnline() == true) { Console.WriteLine("Device is online"); }
+            else
+            {
+                Console.WriteLine(@"      
+                Your device is not connected to the internet.
+                This application needs internet access.
+                Please connect your device to the internet to use this application.");
+                Helper.Closer(false, devData);
+            }
+            if (Helper.APIsOnline() == true) 
+            { Console.WriteLine("API is online"); }
+            else { Console.WriteLine("API is not online. Please try again later."); Helper.Closer(false, devData); }
             //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\", cfgLoc = $"{baseLoc}\\config.json";
