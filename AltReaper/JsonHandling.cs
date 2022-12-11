@@ -40,7 +40,6 @@ namespace Reaper
         }
 
     }
-
     public static class WeatherResponse
     {
         public class weather

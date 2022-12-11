@@ -32,39 +32,40 @@ namespace Reaper
         public static void Main(String[] args)
         {
             //Set window title to Reaper.versionName
-            string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.8.5";
+            string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.9";
             string[] devData = { appName, devName };
             Console.Title = $"{appName} v{versionNumber}";
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.Clear();
 
-            if (Helper.DeviceIsOnline() == true) { Console.WriteLine("Device is online"); }
+            if (Checks.DeviceIsOnline() == true) { Console.WriteLine("Device is online"); }
             else
             {
                 Console.WriteLine(@"      
                 Your device is not connected to the internet.
                 This application needs internet access.
                 Please connect your device to the internet to use this application.");
-                Helper.Closer(false, devData);
+                Helper.Closer(devData);
             }
-            if (Helper.APIsOnline() == true) 
-            { Console.WriteLine("API is online"); }
-            else { Console.WriteLine("API is not online. Please try again later."); Helper.Closer(false, devData); }
+            if (Checks.APIsOnline() == true) { Console.WriteLine("API is online"); }
+            else { Console.WriteLine("API is not online. Please try again later."); Helper.Closer(devData); }
+
             //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\", cfgLoc = $"{baseLoc}\\config.json";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
-            // ask if user wants to use supervisor mode
-            Console.Write("\nDo you want to enter supervisor mode? (yes, no)\n>");
+
+            // ask if user wants to use superuser mode
+            Console.Write("\nDo you want to enter superuser mode? (yes, no)\n>");
             if (Console.ReadLine() == "yes")
             {
-                Console.Write("\nEnter the supervisor password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
+                Console.Write("\nEnter the superuser password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
                 while (true) 
                 { 
                     try 
                     { 
-                        string supervisorPwd = Helper.PasswordMaker();
-                        Helper.SupervisorMode(supervisorPwd, appName, baseLoc);
+                        string superUserPwd = Helper.PasswordMaker();
+                        Helper.SuperUserMode(superUserPwd, appName, baseLoc);
                         break;
                     }
                     catch { Console.Write("\nError. Retype password\n>"); continue; }
@@ -137,28 +138,26 @@ namespace Reaper
                 File.WriteAllText(cfgLoc, tmpConfig);
             }
             JsonHandling.config config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
-            
+
             //gets unit preference
-            string unitPreference = "";
-            while (true)
-            {
-                Console.Write($"\n{langValue.unitQuery} ({langValue.metric},{langValue.imperial})\n>");
-                unitPreference = Console.ReadLine().ToLower();
-                if (unitPreference == langValue.metric ^ unitPreference == langValue.imperial)
-                {
-                    if (unitPreference == langValue.metric) { unitPreference = "metric"; }
-                    if (unitPreference == langValue.imperial) { unitPreference = "imperial"; }
-                    break;
-                }
-                Console.WriteLine(langValue.invalidInput);
-                Console.WriteLine(langValue.pressEnterContinue);
-                while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
-            }
+            string unitPreference = Inputs.UnitPreference(langValue);
 
             //Build data for API call
-            Console.Write($"\n{langValue.nameOfCity}\n>");
             string city = null;
-            while (String.IsNullOrEmpty(city)){ city = Console.ReadLine(); }
+            int check = 0; 
+            while (true)
+            {
+                
+                Console.Write($"\n{langValue.nameOfCity}\n>");
+                city = Console.ReadLine();
+                if(!String.IsNullOrEmpty(city)) { break; }
+                if (check >= 1) 
+                {
+                    Console.WriteLine(langValue.invalidInput);
+                    continue;
+                }
+                check++;
+            }
 
             //make API call
             WeatherResponse.root wetterDaten = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey).Result;
@@ -166,7 +165,7 @@ namespace Reaper
             string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
 
             //mail option
-            Helper.MailOption(langValue, config, content, cfgLoc, devData);
+            Helper.MailOption (langValue, config, content, cfgLoc, devData);
         }
     }
 }

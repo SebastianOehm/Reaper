@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using static Reaper.JsonHandling;
 
 /*
  * config structure
@@ -48,7 +49,7 @@ namespace Reaper
         public static bool configGen (String cfgLoc, bool status, JsonHandling.langVal langValue, JsonHandling.config config)
         {
             //checks if config file exists and if all lines have information
-            if (File.Exists(cfgLoc) && Helper.cfgChecker(config) == false) { return true; }
+            if (File.Exists(cfgLoc) && Checks.cfgChecker(config) == false) { return true; }
 
             string apiKey = config.apiKey;
             Console.Write("\nEnter the mail address which you want use to send mails\n>");
@@ -74,6 +75,26 @@ namespace Reaper
             string configRaw = JsonSerializer.Serialize(json);
             File.WriteAllText(cfgLoc, configRaw);
             return true;
+        }
+        public static string UnitPreference(JsonHandling.langVal langValue)
+        {
+            //gets unit preference
+            string unitPreference = "";
+            while (true)
+            {
+                Console.Write($"\n{langValue.unitQuery} ({langValue.metric},{langValue.imperial})\n>");
+                unitPreference = Console.ReadLine().ToLower();
+                if (unitPreference == langValue.metric ^ unitPreference == langValue.imperial)
+                {
+                    if (unitPreference == langValue.metric) { unitPreference = "metric"; }
+                    if (unitPreference == langValue.imperial) { unitPreference = "imperial"; }
+                    break;
+                }
+                Console.WriteLine(langValue.invalidInput);
+                Console.WriteLine(langValue.pressEnterContinue);
+                while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+            }
+            return unitPreference;
         }
     }
 }

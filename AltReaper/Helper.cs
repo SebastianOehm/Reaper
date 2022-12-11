@@ -1,12 +1,6 @@
 ﻿using Renci.SshNet;
 using System.Text.RegularExpressions;
 using System.Text.Json;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Net;
-using System;
-using System.Globalization;
-using static Reaper.JsonHandling;
 
 namespace Reaper
 {
@@ -24,7 +18,7 @@ namespace Reaper
                     bool partSuccess = false;
                     while (!partSuccess)
                     {
-                        bool problem = cfgChecker(config);
+                        bool problem = Checks.cfgChecker(config);
                         if (problem == true)
                         {
                             Inputs.configGen(cfgLoc, problem, langValue, config);
@@ -34,7 +28,7 @@ namespace Reaper
                         string recipient = Console.ReadLine();
                         if (Outputs.MailOutput(recipient, langValue.yourWeatherInfo, content, langValue, config))
                         {
-                            Closer(true, devData, config, langValue);
+                            Closer(devData, config, langValue);
                         }
                         else { throw new Exception(); }
                         partSuccess = true;
@@ -44,7 +38,7 @@ namespace Reaper
                 {
                     if (answer == langValue.no)
                     {
-                        Closer(false, devData);
+                        Closer(devData);
                     }
                 }
             }
@@ -74,10 +68,10 @@ namespace Reaper
             }
             return password;
         }
-        public static void SupervisorMode(String supervisorPwd, String appName, string directoryLoc)
+        public static void SuperuserMode(String superUserPwd, String appName, string directoryLoc)
         {
             //setting login credentials
-            SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", supervisorPwd);
+            SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", superUserPwd);
             sftp.Connect();
 
             //getting config
@@ -110,59 +104,10 @@ namespace Reaper
             }
             sftp.Disconnect();
         }
-        public static bool cfgChecker(JsonHandling.config config)
-        {       
-            bool[] bools = { String.IsNullOrEmpty(config.apiKey), String.IsNullOrEmpty(config.senderMail), String.IsNullOrEmpty(config.senderMailPassword), String.IsNullOrEmpty(config.hostDomain), String.IsNullOrEmpty(config.portNumber), false, String.IsNullOrEmpty(config.bcc) };
-            try { if (int.Parse(config.portNumber) < 0 && int.Parse(config.portNumber) > 65535) { bools[5] = true; } }
-            catch { return true; }
-            bool problem = false;
-            // if all values of bools are true
-            if (bools.Any(x => x) == true) { problem = true; }
-            return problem;
-        }
-        public static bool DeviceIsOnline()
+        
+        public static void Closer (String[] devData)
         {
-            bool isOnline = false;
-            Ping ping1 = new();
-            Ping ping2 = new();
-            PingReply reply1 = ping1.Send("1.1.1.1");
-            PingReply reply2 = ping2.Send("8.8.8.8");
-            if ( reply1.Status == IPStatus.Success | reply2.Status == IPStatus.Success)
-            {
-                isOnline = true;
-            }
-            
-            return isOnline;
-        }
-        public static bool APIsOnline()
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            bool isOnline = false;
-            IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
-            defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
-            try
-            {
-                // Creates an HttpWebRequest for the specified URL. 
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.openweathermap.org/data/2.5/weather?q=London");
-                // Sends the HttpWebRequest and waits for a response.
-                request.Proxy = defaultWebProxy;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                response.Close();
-
-            }
-            catch (WebException e)
-            {
-                if( e.Message.Equals("The remote server returned an error: (401) Unauthorized.", StringComparison.InvariantCultureIgnoreCase)) { isOnline = true; }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("\nThe following Exception was raised : {0}", e.Message);
-            }
-            return isOnline;
-        }
-        public static void Closer (bool mailSuccess, String[] devData)
-        {
+            Uninstaller(devData);
             Console.WriteLine($"\nThank you for using {devData[0]}!");
             Console.WriteLine("Weather data powered by openweathermap.org");
             Console.WriteLine($"{devData[0]} by {devData[1]}");
@@ -170,9 +115,10 @@ namespace Reaper
             Console.ReadKey();
             Environment.Exit(0);
         }
-        public static void Closer(bool mailSuccess, String[] devData, JsonHandling.config config, JsonHandling.langVal langValue)
+        public static void Closer(String[] devData, JsonHandling.config config, JsonHandling.langVal langValue)
         {
             Console.WriteLine($"{langValue.mailSuccessMessage}");
+            Uninstaller(devData);
             Console.WriteLine($"\nThank you for using {devData[0]}!");
             Console.WriteLine("Weather data powered by openweathermap.org");
             Console.WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
@@ -180,6 +126,16 @@ namespace Reaper
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
             Environment.Exit(0);
+        }
+        public static void Uninstaller(String[] devData)
+        {
+            string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
+            Console.Write($"\nDo you want to unistall {devData[0]} (yes, no)\n>");
+            string choice = Console.ReadLine();
+            if (choice == "yes")
+            {
+                Directory.Delete(baseLoc, true);
+            }
         }
     }
 }
