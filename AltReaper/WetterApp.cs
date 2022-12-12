@@ -160,9 +160,9 @@ namespace Reaper
             }
 
             //make API call
-            WeatherResponse.root wetterDaten = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey).Result;
+            WeatherResponse.root weatherData = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey).Result;
 
-            string[] content = Outputs.WeatherOutput(wetterDaten, unitPreference, langValue);
+            string[] content = Outputs.WeatherOutput(weatherData, unitPreference, langValue);
 
             //mail option
             Helper.MailOption (langValue, config, content, cfgLoc, devData);

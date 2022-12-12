@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reaper
 {
@@ -13,10 +8,23 @@ namespace Reaper
     {
         public static bool cfgChecker(JsonHandling.config config)
         {
-            bool[] bools = { String.IsNullOrEmpty(config.apiKey), String.IsNullOrEmpty(config.senderMail), String.IsNullOrEmpty(config.senderMailPassword), String.IsNullOrEmpty(config.hostDomain), String.IsNullOrEmpty(config.portNumber), false, String.IsNullOrEmpty(config.bcc) };
-            try { if (int.Parse(config.portNumber) < 0 && int.Parse(config.portNumber) > 65535) { bools[5] = true; } }
+            bool[] bools = { 
+                String.IsNullOrEmpty(config.apiKey), 
+                String.IsNullOrEmpty(config.senderMail), 
+                String.IsNullOrEmpty(config.senderMailPassword), 
+                String.IsNullOrEmpty(config.hostDomain), 
+                String.IsNullOrEmpty(config.portNumber), 
+                false, 
+                String.IsNullOrEmpty(config.bcc) 
+            };
+            try 
+            { 
+                if (int.Parse(config.portNumber) < 0 && int.Parse(config.portNumber) > 65535) 
+                { bools[5] = true; } 
+            }
             catch { return true; }
             bool problem = false;
+
             // if all values of bools are true
             if (bools.Any(x => x) == true) { problem = true; }
             return problem;
@@ -24,11 +32,11 @@ namespace Reaper
         public static bool DeviceIsOnline()
         {
             bool isOnline = false;
-            Ping ping1 = new();
-            Ping ping2 = new();
-            PingReply reply1 = ping1.Send("1.1.1.1");
-            PingReply reply2 = ping2.Send("8.8.8.8");
-            if (reply1.Status == IPStatus.Success | reply2.Status == IPStatus.Success)
+            Ping cloudflarePing = new();
+            Ping googlePing = new();
+            PingReply cloudflareReply = cloudflarePing.Send("1.1.1.1");
+            PingReply googleReply = googlePing.Send("8.8.8.8");
+            if (cloudflareReply.Status == IPStatus.Success | googleReply.Status == IPStatus.Success)
             {
                 isOnline = true;
             }
@@ -37,6 +45,7 @@ namespace Reaper
         }
         public static bool APIsOnline()
         {
+            //force internal output to be english
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             bool isOnline = false;

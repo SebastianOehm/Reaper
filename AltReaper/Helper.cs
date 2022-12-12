@@ -68,7 +68,7 @@ namespace Reaper
             }
             return password;
         }
-        public static void SuperuserMode(String superUserPwd, String appName, string directoryLoc)
+        public static void SuperUserMode(String superUserPwd, String appName, string directoryLoc)
         {
             //setting login credentials
             SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", superUserPwd);

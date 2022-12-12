@@ -5,13 +5,13 @@ namespace Reaper
 {
     internal class Outputs
     {
-        public static String[] WeatherOutput(WeatherResponse.root wetterDaten, String unitPreference, JsonHandling.langVal langValue)
+        public static String[] WeatherOutput(WeatherResponse.root weatherData, String unitPreference, JsonHandling.langVal langValue)
         {
             
             //time & timezones, units
             char unitSymbol;
             DateTime localSystemTime = DateTime.Now;
-            int timeZoneShiftFromUTC = wetterDaten.timezone / 3600;
+            int timeZoneShiftFromUTC = weatherData.timezone / 3600;
             string timezoneUTC;
             DateTime locTime = DateTime.UtcNow.AddHours(timeZoneShiftFromUTC);
             int timeDifference = localSystemTime.Hour - locTime.Hour;
@@ -23,13 +23,13 @@ namespace Reaper
             List<String> content = new();
             string spacer = "\n-------------------------------------\n";
             content.Add(spacer);
-            content.Add($"{langValue.theWeatherIn}: {wetterDaten.name}, {wetterDaten.sys.country}");
+            content.Add($"{langValue.theWeatherIn}: {weatherData.name}, {weatherData.sys.country}");
             content.Add($"{langValue.localSystemTime}: {localSystemTime}");
             content.Add($"{langValue.timeAtDestination}: : {locTime} {timezoneUTC} ");
-            content.Add($"{langValue.temp}: {wetterDaten.main.temp:0.#}°{unitSymbol}");
-            content.Add($"{langValue.lowestTemp}: {wetterDaten.main.temp_min:0.#}°{unitSymbol}");
-            content.Add($"{langValue.highestTemp}: {wetterDaten.main.temp_max:0.#}°{unitSymbol}");
-            content.Add($"{langValue.description}: {wetterDaten.weather[0].description}");
+            content.Add($"{langValue.temp}: {weatherData.main.temp:0.#}°{unitSymbol}");
+            content.Add($"{langValue.lowestTemp}: {weatherData.main.temp_min:0.#}°{unitSymbol}");
+            content.Add($"{langValue.highestTemp}: {weatherData.main.temp_max:0.#}°{unitSymbol}");
+            content.Add($"{langValue.description}: {weatherData.weather[0].description}");
             content.Add(spacer);
             string[] cArray = content.ToArray();
             Console.WriteLine(String.Join("\r\n", cArray));
