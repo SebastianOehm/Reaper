@@ -42,9 +42,9 @@ namespace Reaper
             else
             {
                 Console.WriteLine(@"      
-                Your device is not connected to the internet.
-                This application needs internet access.
-                Please connect your device to the internet to use this application.");
+Your device is not connected to the internet.
+This application needs internet access.
+Please connect your device to the internet to use this application.");
                 Helper.Closer(devData);
             }
             if (Checks.APIsOnline() == true) { Console.WriteLine("API is online"); }
