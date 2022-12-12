@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Net.Mail;
 
 namespace Reaper
@@ -7,7 +8,8 @@ namespace Reaper
     {
         public static String[] WeatherOutput(WeatherResponse.root weatherData, String unitPreference, JsonHandling.langVal langValue)
         {
-            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-DE");
             //time & timezones, units
             char unitSymbol;
             DateTime localSystemTime = DateTime.Now;
