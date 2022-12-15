@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text.Json;
+﻿using System.Text.Json;
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
 0       ShortLanguageCode (not a query)
 1       Enter   preference
@@ -31,6 +30,8 @@ namespace Reaper
     {
         public static void Main(String[] args)
         {
+            string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
+
             //Set window title to Reaper.versionName
             string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.9";
             string[] devData = { appName, devName };
@@ -38,26 +39,20 @@ namespace Reaper
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Clear();
 
-            if (Checks.DeviceIsOnline() == true) { Console.WriteLine("Device is online"); }
-            else
-            {
-                Console.WriteLine(@"      
-Your device is not connected to the internet.
-This application needs internet access.
-Please connect your device to the internet to use this application.");
-                Helper.Closer(devData);
-            }
-            if (Checks.APIsOnline() == true) { Console.WriteLine("API is online"); }
-            else { Console.WriteLine("API is not online. Please try again later."); Helper.Closer(devData); }
+            //check connection and API status
+            Checks.DeviceIsOnline(devData);
+            Checks.APIisOnline(devData);
 
             //generate default directory structure and langFile
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\", cfgLoc = $"{baseLoc}\\config.json";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
-
+            string[] superUserOptions = { "yes", "no" };
+            string superUserPrompt = "Do you want to enter superuser mode?";
+            Menu superUser = new(superUserPrompt, superUserOptions);
+            int superUserChoice = superUser.IRExcecute();
             // ask if user wants to use superuser mode
-            Console.Write("\nDo you want to enter superuser mode? (yes, no)\n>");
-            if (Console.ReadLine() == "yes")
+            if (superUserChoice == 0)
             {
                 Console.Write("\nEnter the superuser password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
                 while (true) 
@@ -74,69 +69,12 @@ Please connect your device to the internet to use this application.");
             else { Console.Write("Continuing in standard mode"); }
             TranslationMaker.defaultFileMaker();
 
-            //select language or implement new language
-            Console.Write("\nPlease either input your desired language or input \"new\" to implement another one. (without quotes)\n>");
-            string langPreferenceLong = Console.ReadLine().ToLower(), spacer = "-------------------------";
-            JsonHandling.langVal langValue = null;
-            if (langPreferenceLong == "new")
-            {
-                Console.WriteLine("Please input the name of the language you want to implement");
-                string langName = Console.ReadLine();
-                if (TranslationMaker.newFileMaker(langName) == true)
-                {
-                    langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(langName));
-                }
-            }
-            else
-            {
-                if (langPreferenceLong.ToLower() == "english")
-                {
-                    langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler("default"));
-                    Console.WriteLine($"\n{spacer}\n");
-                    Console.WriteLine($"using {char.ToUpper(langPreferenceLong[0]) + langPreferenceLong.Substring(1)}");
-                    Console.WriteLine($"\n{spacer}");
-                }
-                else
-                {
-                    try 
-                    { 
-                        langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(langPreferenceLong));
-                        Console.WriteLine($"\n{spacer}\n");
-                        Console.WriteLine($"using {char.ToUpper(langPreferenceLong[0]) + langPreferenceLong.Substring(1)}");
-                        Console.WriteLine($"\n{spacer}");
-                    }
-                    catch
-                    {
-                        //resort to default on fail
-                        langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler("default"));
-                        Console.WriteLine($"\n{spacer}");
-                        Console.WriteLine($"{langValue.invalidInput} Using default language (English)");
-                        Console.WriteLine($"{spacer}");
-                    }
-                }
-            }
-            string langPreferenceShort = langValue.shortLanguage;
+            //setting language
+            string chosenLanguage = Inputs.langPreference(fullySupportedLanguages, tree);
+            JsonHandling.langVal langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(chosenLanguage));
 
             //cfg getter
-            JsonHandling.config test = null;
-            try { test = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc)); }
-            catch { File.Delete(cfgLoc); }
-            if (!File.Exists(cfgLoc))
-            {
-                Console.Write("\nEnter your APIKey\n>");
-                string apiKey = Console.ReadLine();
-                var tmp = new JsonHandling.config
-                {
-                    apiKey = apiKey,
-                    senderMail = "",
-                    senderMailPassword = "",
-                    hostDomain = "",
-                    portNumber = "",
-                    bcc = ""
-                };
-                string tmpConfig = JsonSerializer.Serialize(tmp);
-                File.WriteAllText(cfgLoc, tmpConfig);
-            }
+            Inputs.ConfigGetter(cfgLoc);
             JsonHandling.config config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
 
             //gets unit preference
@@ -147,7 +85,6 @@ Please connect your device to the internet to use this application.");
             int check = 0; 
             while (true)
             {
-                
                 Console.Write($"\n{langValue.nameOfCity}\n>");
                 city = Console.ReadLine();
                 if(!String.IsNullOrEmpty(city)) { break; }
@@ -160,12 +97,13 @@ Please connect your device to the internet to use this application.");
             }
 
             //make API call
-            WeatherResponse.root weatherData = Inputs.APICall(city, langPreferenceShort, unitPreference, config.apiKey).Result;
+            WeatherResponse.root weatherData = Inputs.APICall(city, langValue.shortLanguage, unitPreference, config.apiKey).Result;
 
             string[] content = Outputs.WeatherOutput(weatherData, unitPreference, langValue);
 
             //mail option
             Helper.MailOption (langValue, config, content, cfgLoc, devData);
+            
         }
     }
 }

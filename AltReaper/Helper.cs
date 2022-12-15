@@ -112,7 +112,7 @@ namespace Reaper
             Console.WriteLine("Weather data powered by openweathermap.org");
             Console.WriteLine($"{devData[0]} by {devData[1]}");
             Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
+            Console.ReadKey(true);
             Environment.Exit(0);
         }
         public static void Closer(String[] devData, JsonHandling.config config, JsonHandling.langVal langValue)
@@ -124,7 +124,7 @@ namespace Reaper
             Console.WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
             Console.WriteLine($"{devData[0]} by {devData[1]}");
             Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
+            Console.ReadKey(true);
             Environment.Exit(0);
         }
         public static void Uninstaller(String[] devData)

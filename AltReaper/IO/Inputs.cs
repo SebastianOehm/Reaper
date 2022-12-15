@@ -94,5 +94,49 @@ namespace Reaper
             }
             return unitPreference;
         }
+        public static void ConfigGetter(string cfgLoc)
+        {
+            JsonHandling.config test = null;
+            try { test = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc)); }
+            catch { File.Delete(cfgLoc); }
+            if (!File.Exists(cfgLoc))
+            {
+                Console.Write("\nEnter your APIKey\n>");
+                string apiKey = Console.ReadLine();
+                var tmp = new JsonHandling.config
+                {
+                    apiKey = apiKey,
+                    senderMail = "",
+                    senderMailPassword = "",
+                    hostDomain = "",
+                    portNumber = "",
+                    bcc = ""
+                };
+                string tmpConfig = JsonSerializer.Serialize(tmp);
+                File.WriteAllText(cfgLoc, tmpConfig);
+            }
+        }
+        public static String langPreference(String[] fullySupportedLanguages, String tree)
+        {
+            List<string> availableLanguages = new();
+            foreach (string l in fullySupportedLanguages)
+            {
+                if (File.Exists($"{tree}{l}Text.json"))
+                {
+                    availableLanguages.Add($"{char.ToUpper(l[0]) + l.Substring(1)}");
+                }
+            }
+
+
+            string languagePrompt = "Please select your desired language or \"new\" to implement a new language";
+            string[] languageOptions = availableLanguages.ToArray();
+            Menu languageMenu = new Menu(languagePrompt, languageOptions);
+            string spacer = "-------------------------";
+            string selectedLanguage = languageMenu.SRExcecute();
+            Console.WriteLine($"\n{spacer}\n");
+            Console.WriteLine($"using {selectedLanguage}");
+            Console.WriteLine($"\n{spacer}");
+            return selectedLanguage;
+        }
     }
 }

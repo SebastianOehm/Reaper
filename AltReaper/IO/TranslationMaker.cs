@@ -110,7 +110,7 @@ namespace Reaper
         public static bool defaultFileMaker()
         {
             string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
-            string langName = "default";
+            string langName = "english";
             bool langCreated = false, success = false;
 
             string currentUserDesktopPath = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\Reaper\\langFiles\\";
@@ -139,7 +139,7 @@ namespace Reaper
                 langCreated = true;
                 Console.WriteLine($"{char.ToUpper(langName[0]) + langName.Substring(1)} language file successfully created.");
                 Console.Clear();
-                Console.WriteLine("Currently implemented languages: ");
+                /*Console.WriteLine("Currently implemented languages: ");
                 Console.WriteLine("-------------------------");
                 foreach (string l in fullySupportedLanguages)
                 {
@@ -148,7 +148,7 @@ namespace Reaper
                         Console.Write(char.ToUpper(l[0]) + l.Substring(1) + ", "); 
                     }
                 }
-                Console.Write("default\n-------------------------\n");
+                Console.Write("default\n-------------------------\n");*/
             }
             return langCreated;
         }
