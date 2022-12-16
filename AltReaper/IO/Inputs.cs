@@ -77,21 +77,10 @@ namespace Reaper
         public static string UnitPreference(JsonHandling.langVal langValue)
         {
             //gets unit preference
-            string unitPreference = "";
-            while (true)
-            {
-                Console.Write($"\n{langValue.unitQuery} ({langValue.metric},{langValue.imperial})\n>");
-                unitPreference = Console.ReadLine().ToLower();
-                if (unitPreference == langValue.metric ^ unitPreference == langValue.imperial)
-                {
-                    if (unitPreference == langValue.metric) { unitPreference = "metric"; }
-                    if (unitPreference == langValue.imperial) { unitPreference = "imperial"; }
-                    break;
-                }
-                Console.WriteLine(langValue.invalidInput);
-                Console.WriteLine(langValue.pressEnterContinue);
-                while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
-            }
+            string[] unitOptions = { langValue.metric, langValue.imperial };
+            Menu unitMenu = new(langValue.unitQuery, unitOptions);
+            int unitChoice = unitMenu.IRExcecute();
+            string unitPreference = unitChoice == 0 ? "metric" : "imperial";
             return unitPreference;
         }
         public static void ConfigGetter(string cfgLoc)

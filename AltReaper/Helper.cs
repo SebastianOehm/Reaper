@@ -8,39 +8,35 @@ namespace Reaper
     {
         public static void MailOption(JsonHandling.langVal langValue, JsonHandling.config config, String[] content, String cfgLoc, String[] devData)
         {
-            Console.Write($"\n{langValue.mailWanted} ({langValue.yes},{langValue.no})\n>");
-            string answer = null;
-            while (answer != langValue.yes && answer != langValue.no )
-            { 
-                answer = Console.ReadLine().ToLower();
-                if (answer == langValue.yes)
+            string mailPrompt = langValue.mailWanted;
+            string[] mailOptions = {langValue.yes, langValue.no};
+            Menu mailMenu = new Menu(mailPrompt, mailOptions);
+            int mailChoice = mailMenu.IRExcecute();
+
+            if (mailChoice == 0)
+            {
+                bool partSuccess = false;
+                while (!partSuccess)
                 {
-                    bool partSuccess = false;
-                    while (!partSuccess)
+                    bool problem = Checks.cfgChecker(config);
+                    if (problem == true)
                     {
-                        bool problem = Checks.cfgChecker(config);
-                        if (problem == true)
-                        {
-                            Inputs.configGen(cfgLoc, problem, langValue, config);
-                            config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
-                        }
-                        Console.Write($"\n{langValue.mailAddressQuery}\n>");
-                        string recipient = Console.ReadLine();
-                        if (Outputs.MailOutput(recipient, langValue.yourWeatherInfo, content, langValue, config))
-                        {
-                            Closer(devData, config, langValue);
-                        }
-                        else { throw new Exception(); }
-                        partSuccess = true;
+                        Inputs.configGen(cfgLoc, problem, langValue, config);
+                        config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
                     }
-                }
-                else
-                {
-                    if (answer == langValue.no)
+                    Console.Write($"\n{langValue.mailAddressQuery}\n>");
+                    string recipient = Console.ReadLine();
+                    if (Outputs.MailOutput(recipient, langValue.yourWeatherInfo, content, langValue, config))
                     {
-                        Closer(devData);
+                        Closer(devData, config, langValue);
                     }
+                    else { throw new Exception(); }
+                    partSuccess = true;
                 }
+            }
+            else
+            {
+                Closer(devData);
             }
         }
         public static string PasswordMaker()
@@ -130,9 +126,11 @@ namespace Reaper
         public static void Uninstaller(String[] devData)
         {
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
-            Console.Write($"\nDo you want to unistall {devData[0]} (yes,no)\n>");
-            string choice = Console.ReadLine();
-            if (choice == "yes")
+            string uninstallPrompt = $"\nDo you want to unistall {devData[0]} (yes,no)\n>";
+            string[] uninstallOptions = { "yes", "no" };
+            Menu uninstallMenu = new(uninstallPrompt, uninstallOptions);
+            int uninstallChoice = uninstallMenu.IRExcecute();
+            if (uninstallChoice == 0)
             {
                 Directory.Delete(baseLoc, true);
             }
