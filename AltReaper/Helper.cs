@@ -126,7 +126,7 @@ namespace Reaper
         public static void Uninstaller(String[] devData)
         {
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
-            string uninstallPrompt = $"\nDo you want to unistall {devData[0]} (yes,no)\n>";
+            string uninstallPrompt = $"\nDo you want to unistall {devData[0]}?";
             string[] uninstallOptions = { "yes", "no" };
             Menu uninstallMenu = new(uninstallPrompt, uninstallOptions);
             int uninstallChoice = uninstallMenu.IRExcecute();
