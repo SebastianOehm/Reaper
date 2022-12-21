@@ -35,6 +35,8 @@ namespace Reaper
             content.Add(spacer);
             string[] cArray = content.ToArray();
             Console.WriteLine(String.Join("\r\n", cArray));
+            Console.WriteLine(langValue.pressEnterContinue);
+            while(Console.ReadKey(true).Key != ConsoleKey.Enter) { continue; }
             return cArray;
         }
         public static bool MailOutput(String recipient, String subjectLine, String[] content, JsonHandling.langVal langValue, JsonHandling.config config)
