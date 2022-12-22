@@ -1,6 +1,7 @@
 ﻿using Renci.SshNet;
 using System.Text.RegularExpressions;
 using System.Text.Json;
+using static System.Console;
 
 namespace Reaper
 {
@@ -24,8 +25,12 @@ namespace Reaper
                         Inputs.configGen(cfgLoc, problem, langValue, config);
                         config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
                     }
-                    Console.Write($"\n{langValue.mailAddressQuery}\n>");
-                    string recipient = Console.ReadLine();
+                    Write($"\n{langValue.mailAddressQuery}\n>");
+                    CursorVisible = true;
+                    ForegroundColor = ConsoleColor.White;
+                    string recipient = ReadLine();
+                    ForegroundColor = ConsoleColor.Green;
+                    CursorVisible = false;
                     if (Outputs.MailOutput(recipient, langValue.yourWeatherInfo, content, langValue, config))
                     {
                         Closer(devData, config, langValue);
@@ -41,17 +46,18 @@ namespace Reaper
         }
         public static string PasswordMaker()
         {
+            ForegroundColor = ConsoleColor.White;
             string password = "";
             while (true)
             {
-                ConsoleKeyInfo keyPressed = Console.ReadKey(true);
+                ConsoleKeyInfo keyPressed = ReadKey(true);
                 if (keyPressed.Key == ConsoleKey.Enter) { break; }
                 else if (keyPressed.Key == ConsoleKey.Backspace)
                 {
                     if (password.Length > 0)
                     {
                         password = password.Remove(password.Length - 1);
-                        Console.Write("\b \b");
+                        Write("\b \b");
                     }
                 }
 
@@ -59,9 +65,10 @@ namespace Reaper
                 else if (keyPressed.KeyChar != '\u0000')
                 {
                     password += keyPressed.KeyChar;
-                    Console.Write("*");
+                    Write("*");
                 }
             }
+            ForegroundColor = ConsoleColor.Green;
             return password;
         }
         public static void SuperUserMode(String superUserPwd, String appName, string directoryLoc)
@@ -104,23 +111,23 @@ namespace Reaper
         public static void Closer (String[] devData)
         {
             Uninstaller(devData);
-            Console.WriteLine($"\nThank you for using {devData[0]}!");
-            Console.WriteLine("Weather data powered by openweathermap.org");
-            Console.WriteLine($"{devData[0]} by {devData[1]}");
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey(true);
+            WriteLine($"\nThank you for using {devData[0]}!");
+            WriteLine("Weather data powered by openweathermap.org");
+            WriteLine($"{devData[0]} by {devData[1]}");
+            WriteLine("Press any key to exit.");
+            ReadKey(true);
             Environment.Exit(0);
         }
         public static void Closer(String[] devData, JsonHandling.config config, JsonHandling.langVal langValue)
         {
-            Console.WriteLine($"{langValue.mailSuccessMessage}");
+            WriteLine($"{langValue.mailSuccessMessage}");
             Uninstaller(devData);
-            Console.WriteLine($"\nThank you for using {devData[0]}!");
-            Console.WriteLine("Weather data powered by openweathermap.org");
-            Console.WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
-            Console.WriteLine($"{devData[0]} by {devData[1]}");
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey(true);
+            WriteLine($"\nThank you for using {devData[0]}!");
+            WriteLine("Weather data powered by openweathermap.org");
+            WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
+            WriteLine($"{devData[0]} by {devData[1]}");
+            WriteLine("Press any key to exit.");
+            ReadKey(true);
             Environment.Exit(0);
         }
         public static void Uninstaller(String[] devData)
