@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using static System.Console;
 
 /*
  * config structure
@@ -50,16 +51,25 @@ namespace Reaper
             if (File.Exists(cfgLoc) && Checks.cfgChecker(config) == false) { return true; }
 
             string apiKey = config.apiKey;
-            Console.Write("\nEnter the mail address which you want use to send mails\n>");
-            string senderMail = Console.ReadLine();
-            Console.Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
+            Write("\nEnter the mail address which you want use to send mails\n>");
+            CursorVisible = true;
+            ForegroundColor = ConsoleColor.White;
+            string senderMail = ReadLine();
+            ForegroundColor = ConsoleColor.Green;
+            Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
             string senderMailPassword = Helper.PasswordMaker();
-            Console.Write("\nEnter the smtp host domain\"\n>");
-            string hostDomain = Console.ReadLine(); 
-            Console.Write("\nEnter the smtp port Number\n>");
-            string portNumber = Console.ReadLine();
-            Console.Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue.no}\" (without quotes) \n>");
-            string BCC = Console.ReadLine();
+            Write("\nEnter the smtp host domain\"\n>");
+            ForegroundColor = ConsoleColor.White;
+            string hostDomain = ReadLine();
+            ForegroundColor = ConsoleColor.Green;
+            Write("\nEnter the smtp port Number\n>");
+            ForegroundColor = ConsoleColor.White;
+            string portNumber = ReadLine();
+            ForegroundColor = ConsoleColor.Green;
+            Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue.no}\" (without quotes) \n>");
+            ForegroundColor = ConsoleColor.White;
+            string BCC = ReadLine();
+            CursorVisible = false;
 
             var json = new JsonHandling.config
             {
@@ -91,7 +101,7 @@ namespace Reaper
             if (!File.Exists(cfgLoc))
             {
                 Console.Write("\nEnter your APIKey\n>");
-                string apiKey = Console.ReadLine();
+                string apiKey = ReadLine();
                 var tmp = new JsonHandling.config
                 {
                     apiKey = apiKey,
@@ -122,9 +132,9 @@ namespace Reaper
             Menu languageMenu = new Menu(languagePrompt, languageOptions);
             string spacer = "-------------------------";
             string selectedLanguage = languageMenu.SRExcecute();
-            Console.WriteLine($"\n{spacer}\n");
-            Console.WriteLine($"using {selectedLanguage}");
-            Console.WriteLine($"\n{spacer}");
+            WriteLine($"\n{spacer}\n");
+            WriteLine($"using {selectedLanguage}");
+            WriteLine($"\n{spacer}");
             return selectedLanguage;
         }
     }

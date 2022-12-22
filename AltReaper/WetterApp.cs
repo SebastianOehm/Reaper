@@ -1,4 +1,7 @@
 ﻿using System.Text.Json;
+using static System.Console;
+using static Reaper.JsonHandling;
+using static Reaper.WeatherResponse;
 /* LineByLineTranslationFileInstructions | W = Word | number=line index
 0       ShortLanguageCode (not a query)
 1       Enter   preference
@@ -33,11 +36,12 @@ namespace Reaper
             string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
 
             //Set window title to Reaper.versionName
-            string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.9";
+            string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.9.1";
             string[] devData = { appName, devName };
-            Console.Title = $"{appName} v{versionNumber}";
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Clear();
+            Title = $"{appName} v{versionNumber}";
+            ForegroundColor = ConsoleColor.Green;
+            CursorVisible= false;
+            Clear();
 
             //check connection and API status
             Checks.DeviceIsOnline(devData);
@@ -47,11 +51,13 @@ namespace Reaper
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
             string tree = $"{baseLoc}\\langFiles\\", cfgLoc = $"{baseLoc}\\config.json";
             if (!Directory.Exists(tree)) { Directory.CreateDirectory(tree); }
+
+            // ask if user wants to use superuser mode
             string[] superUserOptions = { "yes", "no" };
             string superUserPrompt = "Do you want to enter superuser mode?";
             Menu superUser = new(superUserPrompt, superUserOptions);
             int superUserChoice = superUser.IRExcecute();
-            // ask if user wants to use superuser mode
+            
             if (superUserChoice == 0)
             {
                 Console.Write("\nEnter the superuser password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
@@ -71,33 +77,37 @@ namespace Reaper
 
             //setting language
             string chosenLanguage = Inputs.langPreference(fullySupportedLanguages, tree);
-            JsonHandling.langVal langValue = JsonSerializer.Deserialize<JsonHandling.langVal>(Inputs.langHandler(chosenLanguage));
+            langVal langValue = JsonSerializer.Deserialize<langVal>(Inputs.langHandler(chosenLanguage));
 
             //cfg getter
             Inputs.ConfigGetter(cfgLoc);
-            JsonHandling.config config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
+            config config = JsonSerializer.Deserialize<config>(File.ReadAllText(cfgLoc));
 
             //gets unit preference
             string unitPreference = Inputs.UnitPreference(langValue);
 
             //Build data for API call
             string city = null;
-            int check = 0; 
+            int check = 0;
+            CursorVisible = true;
             while (true)
             {
-                Console.Write($"\n{langValue.nameOfCity}\n>");
-                city = Console.ReadLine();
+                Write($"\n{langValue.nameOfCity}\n>");
+                ForegroundColor = ConsoleColor.White;
+                city = ReadLine();
                 if(!String.IsNullOrEmpty(city)) { break; }
                 if (check >= 1) 
                 {
-                    Console.WriteLine(langValue.invalidInput);
+                    ForegroundColor = ConsoleColor.Green;
+                    WriteLine(langValue.invalidInput);
                     continue;
                 }
                 check++;
             }
-
+            ForegroundColor = ConsoleColor.Green;
+            CursorVisible = false;
             //make API call
-            WeatherResponse.root weatherData = Inputs.APICall(city, langValue.shortLanguage, unitPreference, config.apiKey).Result;
+            root weatherData = Inputs.APICall(city, langValue.shortLanguage, unitPreference, config.apiKey).Result;
 
             string[] content = Outputs.WeatherOutput(weatherData, unitPreference, langValue);
 

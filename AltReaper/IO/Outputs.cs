@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 using System.Net.Mail;
+using static System.Console;
 
 namespace Reaper
 {
@@ -34,18 +35,21 @@ namespace Reaper
             content.Add($"{langValue.description}: {weatherData.weather[0].description}");
             content.Add(spacer);
             string[] cArray = content.ToArray();
-            Console.WriteLine(String.Join("\r\n", cArray));
-            Console.WriteLine(langValue.pressEnterContinue);
-            while(Console.ReadKey(true).Key != ConsoleKey.Enter) { continue; }
+            WriteLine(String.Join("\r\n", cArray));
+            WriteLine(langValue.pressEnterContinue);
+            while(ReadKey(true).Key != ConsoleKey.Enter) { continue; }
             return cArray;
         }
         public static bool MailOutput(String recipient, String subjectLine, String[] content, JsonHandling.langVal langValue, JsonHandling.config config)
         {
             //Set salutation
-            Console.Write($"\n{langValue.nameOr}\n>");
-            string name = Console.ReadLine();
+            Write($"\n{langValue.nameOr}\n>");
+            CursorVisible = true;
+            ForegroundColor = ConsoleColor.White;
+            string name = ReadLine();
             if (name == langValue.no) { name = ""; }
-
+            ForegroundColor = ConsoleColor.Green;
+            CursorVisible = false;
             //Set smtp config
             var smtpClient = new SmtpClient(config.hostDomain, int.Parse(config.portNumber))
             {
@@ -76,7 +80,7 @@ namespace Reaper
             catch
             {
                 Exception mail = new Exception();
-                Console.WriteLine(mail);
+                WriteLine(mail);
                 return false;
             }
             return true;
