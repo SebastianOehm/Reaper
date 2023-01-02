@@ -40,7 +40,8 @@ namespace Reaper
             string[] devData = { appName, devName };
             Title = $"{appName} v{versionNumber}";
             ForegroundColor = ConsoleColor.Green;
-            CursorVisible= false;
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            CursorVisible = false;
             Clear();
 
             //check connection and API status
