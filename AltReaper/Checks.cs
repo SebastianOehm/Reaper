@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
-using System.Net.NetworkInformation;
 using System.Net;
-using Renci.SshNet.Common;
-using System.Security.Cryptography.X509Certificates;
+using System.Net.NetworkInformation;
+using static System.Console;
 
 namespace Reaper
 {
@@ -31,61 +30,54 @@ namespace Reaper
             if (bools.Any(x => x) == true) { problem = true; }
             return problem;
         }
-        public static void DeviceIsOnline(String[] devData)
+        public static void DeviceIsOnline()
         {
-            bool isOnline = false;
             Ping cloudflarePing = new();
             Ping googlePing = new();
             PingReply cloudflareReply = cloudflarePing.Send("1.1.1.1");
             PingReply googleReply = googlePing.Send("8.8.8.8");
             if (cloudflareReply.Status == IPStatus.Success | googleReply.Status == IPStatus.Success)
             {
-                isOnline = true;
-            }
-            if (isOnline == true) { Console.WriteLine("Device is online"); }
-            else
+                WriteLine("Device is online");
+            } else
             {
-                Console.WriteLine(@"      
+                WriteLine(@"      
 Your device is not connected to the internet.
 This application needs internet access.
 Please connect your device to the internet to use this application.");
-                Helper.Closer(devData);
+                Helper.Closer();
             }
         }
-        public static void APIisOnline(String[] devData)
-    {
+        public static void APIisOnline()
+        {
             //force internal output to be english
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            bool isOnline = false;
             IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
             defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
             try
             {
-                // Creates an HttpWebRequest for the specified URL. 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.openweathermap.org/data/2.5/weather?q=London");
-                // Sends the HttpWebRequest and waits for a response.
                 request.Proxy = defaultWebProxy;
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 response.Close();
-
             }
             catch (WebException e)
             {
-                if (e.Message.Equals("The remote server returned an error: (401) Unauthorized.", StringComparison.InvariantCultureIgnoreCase)) { isOnline = true; }
+                if (e.Message.Equals("The remote server returned an error: (401) Unauthorized.", StringComparison.InvariantCultureIgnoreCase)) 
+                { WriteLine("API is online"); }
+                else { WriteLine("API is not online. Please try again later."); Helper.Closer(); }
             }
             catch (Exception e)
             {
-                Console.WriteLine("\nThe following Exception was raised : {0}", e.Message);
+                WriteLine("\nThe following Exception was raised : {0}", e.Message);
             }
-            if (isOnline == true) { Console.WriteLine("API is online"); }
-            else { Console.WriteLine("API is not online. Please try again later."); Helper.Closer(devData); }
         }
     }
     class Menu
     {
         private int Index;
-        private String[] Options;
+        private string[] Options;
         private string InputPrompt;
         public Menu(string inputPrompt, string[] options)
         {
@@ -100,7 +92,7 @@ Please connect your device to the internet to use this application.");
             {
                 string currentOption = Options[counter];
                 string prefix;
-                if(counter == Index)
+                if (counter == Index)
                 {
                     prefix = ">";
                     Console.BackgroundColor = ConsoleColor.White;
@@ -109,12 +101,10 @@ Please connect your device to the internet to use this application.");
                 else
                 {
                     prefix = " ";
-                    Console.BackgroundColor= ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.Black;
                     Console.ForegroundColor = ConsoleColor.White;
                 }
-
-                Console.WriteLine($"{prefix} {currentOption}"); //fill some pretty stuff in later
-
+                Console.WriteLine($"{prefix} {currentOption}");
             }
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Green;
@@ -144,7 +134,7 @@ Please connect your device to the internet to use this application.");
                     {
                         Index = 0;
                     }
-                }                
+                }
             } while (pressedKey != ConsoleKey.Enter);
             return Index;
         }
@@ -178,4 +168,4 @@ Please connect your device to the internet to use this application.");
             return Options[Index];
         }
     }
-} 
+}

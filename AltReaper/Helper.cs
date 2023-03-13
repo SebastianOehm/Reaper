@@ -1,39 +1,44 @@
 ﻿using Renci.SshNet;
-using System.Text.RegularExpressions;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using static System.Console;
 
 namespace Reaper
 {
+    public static class globalVars
+    {
+        public static string[] fullySupportedLanguages = { "afrikaans", "albanian", "arabic", "azerbaijani", "bulgarian", "catalan", "czech", "danish", "german", "greek", "english", "basque", "persian", "farsi", "finnish", "french", "galician", "Hebrew", "hindi", "croatian", "hungarian", "indonesian", "italian", "japanese", "korean", "latvian", "lithuanian", "macedonian", "norwegian", "dutch", "polish", "portuguese", "romanian", "russian", "swedish", "slovak", "slovenian", "spanish", "serbian", "thai", "turkish", "ukrainian", "vietnamese", "chinese simplified", "chinese traditional", "zulu" };
+        public static string[] supportedShortCodes = { "af", "al", "ar", "az", "bg", "ca", "cz", "da", "de", "el", "en", "eu", "fa", "fa", "fi", "fr", "gl", "he", "hi", "hr", "hu", "id", "it", "ja", "kr", "la", "lt", "mk", "no", "nl", "pl", "pt", "pt_br", "ro", "ru", "se", "sk", "sl", "sr", "th", "tr", "ua", "vi", "zh_cn", "zh_tw", "zu" };
+        public static string appName = "Reaper", devName = "WetterSenseDev", versionNumber = "0.9.2";
+        public static string[] devData = { appName, devName };
+        public static string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
+        public static string tree = $"{baseLoc}\\langFiles\\", cfgLoc = $"{baseLoc}\\config.json";
+    }
     internal class Helper
     {
-        public static void MailOption(JsonHandling.langVal langValue, JsonHandling.config config, String[] content, String cfgLoc, String[] devData)
+        public static void MailOption(JsonHandling.langVal langValue, JsonHandling.config config, String[] content)
         {
-            string mailPrompt = langValue.mailWanted;
-            string[] mailOptions = {langValue.yes, langValue.no};
-            Menu mailMenu = new Menu(mailPrompt, mailOptions);
-            int mailChoice = mailMenu.IRExcecute();
+            string[] mailOptions = { langValue.yes, langValue.no };
+            Menu mailMenu = new Menu(langValue.mailWanted, mailOptions);
 
-            if (mailChoice == 0)
+            if (mailMenu.IRExcecute() == 0)
             {
                 bool partSuccess = false;
                 while (!partSuccess)
                 {
-                    bool problem = Checks.cfgChecker(config);
-                    if (problem == true)
+                    if (Checks.cfgChecker(config))
                     {
-                        Inputs.configGen(cfgLoc, problem, langValue, config);
-                        config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc));
+                        Inputs.configGen(langValue, config);
+                        config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(globalVars.cfgLoc));
                     }
                     Write($"\n{langValue.mailAddressQuery}\n>");
                     CursorVisible = true;
                     ForegroundColor = ConsoleColor.White;
-                    string recipient = ReadLine();
                     ForegroundColor = ConsoleColor.Green;
                     CursorVisible = false;
-                    if (Outputs.MailOutput(recipient, langValue.yourWeatherInfo, content, langValue, config))
+                    if (Outputs.MailOutput(ReadLine(), langValue.yourWeatherInfo, content, langValue, config))
                     {
-                        Closer(devData, config, langValue);
+                        Closer(config, langValue);
                     }
                     else { throw new Exception(); }
                     partSuccess = true;
@@ -41,7 +46,7 @@ namespace Reaper
             }
             else
             {
-                Closer(devData);
+                Closer();
             }
         }
         public static string PasswordMaker()
@@ -73,30 +78,22 @@ namespace Reaper
         }
         public static void SuperUserMode(String superUserPwd, String appName, string directoryLoc)
         {
-            //setting login credentials
             SftpClient sftp = new SftpClient("ssh.strato.de", $"sftp_{appName}@wettersense.de", superUserPwd);
             sftp.Connect();
 
-            //getting config
             Stream configLoc = File.Create($"{directoryLoc}\\config.json");
             sftp.DownloadFile(@"/config.json", configLoc);
             configLoc.Close();
-            
-            //search for available language files
-            var langFileList = sftp.ListDirectory("/langFiles/").ToList();
-            System.Collections.IEnumerable list = sftp.ListDirectory("/langFiles/", null);
-            System.Collections.IEnumerator enumerator = list.GetEnumerator();
-            Renci.SshNet.Sftp.SftpFile sftpFile;
-            string name;
+
+            System.Collections.IEnumerator enumerator = sftp.ListDirectory("/langFiles/", null).GetEnumerator();
             List<string> files = new List<string>();
             while (enumerator.MoveNext())
             {
-                sftpFile = (Renci.SshNet.Sftp.SftpFile)enumerator.Current;
-                name = sftpFile.Name;
+                Renci.SshNet.Sftp.SftpFile sftpFile = (Renci.SshNet.Sftp.SftpFile)enumerator.Current;
+                string name = sftpFile.Name;
                 files.Add(name);
             }
 
-            //getting available language files
             Regex myRegex = new Regex(@"^[a-z]+Text\.json$");
             List<string> downloadList = files.Where(f => myRegex.IsMatch(f)).ToList();
             foreach (string str in downloadList)
@@ -107,33 +104,32 @@ namespace Reaper
             }
             sftp.Disconnect();
         }
-        
-        public static void Closer (String[] devData)
+        public static void Closer()
         {
-            Uninstaller(devData);
-            WriteLine($"\nThank you for using {devData[0]}!");
+            Uninstaller();
+            WriteLine($"\nThank you for using {globalVars.devData[0]}!");
             WriteLine("Weather data powered by openweathermap.org");
-            WriteLine($"{devData[0]} by {devData[1]}");
+            WriteLine($"{globalVars.devData[0]} by {globalVars.devData[1]}");
             WriteLine("Press any key to exit.");
             ReadKey(true);
             Environment.Exit(0);
         }
-        public static void Closer(String[] devData, JsonHandling.config config, JsonHandling.langVal langValue)
+        public static void Closer(JsonHandling.config config, JsonHandling.langVal langValue)
         {
             WriteLine($"{langValue.mailSuccessMessage}");
-            Uninstaller(devData);
-            WriteLine($"\nThank you for using {devData[0]}!");
+            Uninstaller();
+            WriteLine($"\nThank you for using {globalVars.devData[0]}!");
             WriteLine("Weather data powered by openweathermap.org");
             WriteLine($"Mail powered by htmlemail.io & {config.senderMail.Split('@')[1]}");
-            WriteLine($"{devData[0]} by {devData[1]}");
+            WriteLine($"{globalVars.devData[0]} by {globalVars.devData[1]}");
             WriteLine("Press any key to exit.");
             ReadKey(true);
             Environment.Exit(0);
         }
-        public static void Uninstaller(String[] devData)
+        public static void Uninstaller()
         {
             string baseLoc = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper";
-            string uninstallPrompt = $"\nDo you want to unistall {devData[0]}?";
+            string uninstallPrompt = $"\nDo you want to unistall {globalVars.devData[0]}?";
             string[] uninstallOptions = { "yes", "no" };
             Menu uninstallMenu = new(uninstallPrompt, uninstallOptions);
             int uninstallChoice = uninstallMenu.IRExcecute();

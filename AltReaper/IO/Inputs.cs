@@ -16,16 +16,14 @@ namespace Reaper
 {
     internal class Inputs
     {
-        public static String configReader (String cfgLoc) 
+        public static String configReader()
         {
-            string config = File.ReadAllText(cfgLoc);
-            return config;
+            return File.ReadAllText(globalVars.cfgLoc);
         }
         public static String langHandler(String langPreferenceLong)
         {
             //importing selected language file
-            string langValue = File.ReadAllText($"{Environment.GetEnvironmentVariable("USERPROFILE")}\\Desktop\\Reaper\\langFiles\\{langPreferenceLong}Text.json");
-            return langValue;
+            return File.ReadAllText($"{globalVars.tree}{langPreferenceLong}Text.json");
         }
         public static async Task<WeatherResponse.root> APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
         {
@@ -41,14 +39,13 @@ namespace Reaper
                 BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"),
             };
 
-            var jsonResponse = await client.GetFromJsonAsync<WeatherResponse.root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}");
-            return jsonResponse;
+            return await client.GetFromJsonAsync<WeatherResponse.root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}");
         }
 
-        public static bool configGen (String cfgLoc, bool status, JsonHandling.langVal langValue, JsonHandling.config config)
+        public static bool configGen(JsonHandling.langVal langValue, JsonHandling.config config)
         {
             //checks if config file exists and if all lines have information
-            if (File.Exists(cfgLoc) && Checks.cfgChecker(config) == false) { return true; }
+            if (File.Exists(globalVars.cfgLoc) && Checks.cfgChecker(config) == false) { return true; }
 
             string apiKey = config.apiKey;
             Write("\nEnter the mail address which you want use to send mails\n>");
@@ -80,8 +77,7 @@ namespace Reaper
                 portNumber = portNumber,
                 bcc = BCC
             };
-            string configRaw = JsonSerializer.Serialize(json);
-            File.WriteAllText(cfgLoc, configRaw);
+            File.WriteAllText(globalVars.cfgLoc, JsonSerializer.Serialize(json));
             return true;
         }
         public static string UnitPreference(JsonHandling.langVal langValue)
@@ -89,18 +85,16 @@ namespace Reaper
             //gets unit preference
             string[] unitOptions = { langValue.metric, langValue.imperial };
             Menu unitMenu = new(langValue.unitQuery, unitOptions);
-            int unitChoice = unitMenu.IRExcecute();
-            string unitPreference = unitChoice == 0 ? "metric" : "imperial";
-            return unitPreference;
+            return unitMenu.IRExcecute() == 0 ? "metric" : "imperial";
         }
-        public static void ConfigGetter(string cfgLoc)
+        public static void ConfigGetter()
         {
             JsonHandling.config test = null;
-            try { test = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(cfgLoc)); }
-            catch { File.Delete(cfgLoc); }
-            if (!File.Exists(cfgLoc))
+            try { test = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(globalVars.cfgLoc)); }
+            catch { File.Delete(globalVars.cfgLoc); }
+            if (!File.Exists(globalVars.cfgLoc))
             {
-                Console.Write("\nEnter your APIKey\n>");
+                Write("\nEnter your APIKey\n>");
                 string apiKey = ReadLine();
                 var tmp = new JsonHandling.config
                 {
@@ -111,25 +105,21 @@ namespace Reaper
                     portNumber = "",
                     bcc = ""
                 };
-                string tmpConfig = JsonSerializer.Serialize(tmp);
-                File.WriteAllText(cfgLoc, tmpConfig);
+                File.WriteAllText(globalVars.cfgLoc, JsonSerializer.Serialize(tmp));
             }
         }
-        public static String langPreference(String[] fullySupportedLanguages, String tree)
+        public static String langPreference()
         {
             List<string> availableLanguages = new();
-            foreach (string l in fullySupportedLanguages)
+            foreach (string l in globalVars.fullySupportedLanguages)
             {
-                if (File.Exists($"{tree}{l}Text.json"))
+                if (File.Exists($"{globalVars.tree}{l}Text.json"))
                 {
                     availableLanguages.Add($"{char.ToUpper(l[0]) + l.Substring(1)}");
                 }
             }
 
-
-            string languagePrompt = "Please select your desired language or \"new\" to implement a new language";
-            string[] languageOptions = availableLanguages.ToArray();
-            Menu languageMenu = new Menu(languagePrompt, languageOptions);
+            Menu languageMenu = new Menu("Please select your desired language or \"new\" to implement a new language", availableLanguages.ToArray());
             string spacer = "-------------------------";
             string selectedLanguage = languageMenu.SRExcecute();
             WriteLine($"\n{spacer}\n");
