@@ -7,7 +7,7 @@ namespace Reaper
     {
         public static bool newFileMaker(string langName)
         {
-            string currentUserDesktopPath = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\Reaper\\langFiles\\";
+            string currentUserDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\Desktop\\Reaper\\langFiles\\";
             string futureFilePath = currentUserDesktopPath + langName.ToLower() + "Text.json";
 
             bool langCreated = false;
@@ -121,7 +121,7 @@ namespace Reaper
             string langName = "english";
             bool langCreated = false;
 
-            string currentUserDesktopPath = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\Reaper\\langFiles\\";
+            string currentUserDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\Desktop\\Reaper\\langFiles\\";
             string futureFilePath = currentUserDesktopPath + langName.ToLower() + "Text.json";
 
             var langVal = new JsonHandling.langVal
