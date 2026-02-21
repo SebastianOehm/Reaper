@@ -69,7 +69,7 @@ namespace Reaper
             ForegroundColor = ConsoleColor.Green;
             CursorVisible = false;
 
-            root weatherData = Inputs.APICall(city, apiCode, unitPreference, config.apiKey).Result;
+            root weatherData = Inputs.APICall(city, apiCode, unitPreference, config!.apiKey).Result;
 
             var content = Outputs.WeatherOutput(weatherData, unitPreference);
 
