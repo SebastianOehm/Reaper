@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using Reaper.IO;
+using System.Globalization;
+using System.Text.Json;
 using static Reaper.JsonHandling;
 using static Reaper.WeatherResponse;
 using static System.Console;
@@ -9,8 +11,8 @@ namespace Reaper
     {
         public static void Main(String[] args)
         {
-            
-            Title = $"{globalVars.appName} v{globalVars.versionNumber}";
+
+            Title = string.Format(Properties.Resources.AppTitleFormat, Properties.Resources.AppName, Properties.Resources.VersionNumber);
             ForegroundColor = ConsoleColor.Green;
             OutputEncoding = System.Text.Encoding.UTF8;
             CursorVisible = false;
@@ -19,51 +21,48 @@ namespace Reaper
             Checks.DeviceIsOnline();
             Checks.APIisOnline();
 
- 
-            if (!Directory.Exists(globalVars.tree)) { Directory.CreateDirectory(globalVars.tree); }
+            string[] superUserOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
+            Menu superUser = new(Properties.Resources.SuperUserQuestion, superUserOptions);
 
-            string[] superUserOptions = { "yes", "no" };
-            Menu superUser = new("Do you want to enter superuser mode?", superUserOptions);
-
-            if (superUser.IRExcecute() == 0)
+            if (superUser.IRExecute() == 0)
             {
-                Write("\nEnter the superuser password. Password won't be shown, type each char individually, backspace to correct, enter to continue\n>");
+                Write("\n" + Properties.Resources.SuperUserPasswordPrompt + "\n>");
                 while (true)
                 {
                     try
                     {
-                        Helper.SuperUserMode(Helper.PasswordMaker(), globalVars.appName, globalVars.baseLoc);
+                        Helper.SuperUserMode(Helper.PasswordMaker(), Properties.Resources.AppName, globalVars.baseLoc);
                         break;
                     }
-                    catch { Write("\nError. Retype password\n>"); continue; }
+                    catch { Write("\n" + Properties.Resources.ErrorRetypePassword + "\n>"); continue; }
                 }
             }
-            else { Write("Continuing in standard mode"); }
-            TranslationMaker.defaultFileMaker();
-
+            else { Write(Properties.Resources.ContinuingStandardMode); }
 
             string chosenLanguage = Inputs.langPreference();
-            langVal langValue = JsonSerializer.Deserialize<langVal>(Inputs.langHandler(chosenLanguage));
+            // Load language values from RESX via LanguageLoader
+            (string apiCode, CultureInfo culture) = LanguageLoader.Load(chosenLanguage);
+            Thread.CurrentThread.CurrentUICulture = culture;
+            Thread.CurrentThread.CurrentCulture = culture;
 
             Inputs.ConfigGetter();
             config config = JsonSerializer.Deserialize<config>(File.ReadAllText(globalVars.cfgLoc));
 
 
-            string unitPreference = Inputs.UnitPreference(langValue);
-
-            string city = null;
+            string unitPreference = Inputs.UnitPreference();
             int check = 0;
             CursorVisible = true;
+            string? city;
             while (true)
             {
-                Write($"\n{langValue.nameOfCity}\n>");
+                Write($"\n{Properties.Resources.nameOfCity}\n>");
                 ForegroundColor = ConsoleColor.White;
                 city = ReadLine();
-                if (!String.IsNullOrEmpty(city)) { break; }
+                if (!string.IsNullOrEmpty(city)) { break; }
                 if (check >= 1)
                 {
                     ForegroundColor = ConsoleColor.Green;
-                    WriteLine(langValue.invalidInput);
+                    WriteLine(Properties.Resources.invalidInput);
                     continue;
                 }
                 check++;
@@ -71,11 +70,11 @@ namespace Reaper
             ForegroundColor = ConsoleColor.Green;
             CursorVisible = false;
 
-            root weatherData = Inputs.APICall(city, langValue.shortLanguage, unitPreference, config.apiKey).Result;
+            root weatherData = Inputs.APICall(city, apiCode, unitPreference, config.apiKey).Result;
 
-            var content = Outputs.WeatherOutput(weatherData, unitPreference, langValue);
+            var content = Outputs.WeatherOutput(weatherData, unitPreference);
 
-            Helper.MailOption(langValue, config, content);
+            Helper.MailOption(config, content);
         }
     }
 }

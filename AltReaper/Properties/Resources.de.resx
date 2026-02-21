@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DeviceOnline" xml:space="preserve">
+    <value>Gerät ist online</value>
+  </data>
+  <data name="DeviceOfflineDetails" xml:space="preserve">
+    <value>Ihr Gerät ist nicht mit dem Internet verbunden.
+Diese Anwendung benötigt Internetzugang.
+Bitte verbinden Sie Ihr Gerät mit dem Internet, um diese Anwendung zu benutzen.</value>
+  </data>
+  <data name="ApiOnline" xml:space="preserve">
+    <value>API ist online</value>
+  </data>
+  <data name="ApiOffline" xml:space="preserve">
+    <value>API ist nicht online. Bitte versuchen Sie es später erneut.</value>
+  </data>
+  <data name="NetworkErrorFormat" xml:space="preserve">
+    <value>Netzwerkfehler beim Kontaktieren der API: {0}</value>
+  </data>
+  <data name="ExceptionRaisedFormat" xml:space="preserve">
+    <value>Die folgende Ausnahme wurde ausgelöst : {0}</value>
+  </data>
+  <data name="AppTitleFormat" xml:space="preserve">
+    <value>{0} v{1}</value>
+  </data>
+  <data name="SuperUserQuestion" xml:space="preserve">
+    <value>Möchten Sie in den Superuser-Modus wechseln?</value>
+  </data>
+  <data name="YesOption" xml:space="preserve">
+    <value>ja</value>
+  </data>
+  <data name="NoOption" xml:space="preserve">
+    <value>nein</value>
+  </data>
+  <data name="SuperUserPasswordPrompt" xml:space="preserve">
+    <value>Geben Sie das Superuser-Passwort ein. Das Passwort wird nicht angezeigt, geben Sie jedes Zeichen einzeln ein, Rücktaste zum Korrigieren, Enter zum Fortfahren</value>
+  </data>
+  <data name="ErrorRetypePassword" xml:space="preserve">
+    <value>Fehler. Passwort erneut eingeben</value>
+  </data>
+  <data name="ContinuingStandardMode" xml:space="preserve">
+    <value>Wird im Standardmodus fortgesetzt</value>
+  </data>
+  <data name="FullySupportedLanguages" xml:space="preserve">
+    <value>afrikaans|albanian|arabic|azerbaijani|bulgarian|catalan|czech|danish|german|greek|english|basque|persian|farsi|finnish|french|galician|Hebrew|hindi|croatian|hungarian|indonesian|italian|japanese|korean|latvian|lithuanian|macedonian|norwegian|dutch|polish|portuguese|romanian|russian|swedish|slovak|slovenian|spanish|serbian|thai|turkish|ukrainian|vietnamese|chinese simplified|chinese traditional|zulu</value>
+  </data>
+  <data name="SupportedShortCodes" xml:space="preserve">
+    <value>af|al|ar|az|bg|ca|cz|da|de|el|en|eu|fa|fa|fi|fr|gl|he|hi|hr|hu|id|it|ja|kr|la|lt|mk|no|nl|pl|pt|pt_br|ro|ru|se|sk|sl|sr|th|tr|ua|vi|zh_cn|zh_tw|zu</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Reaper</value>
+  </data>
+  <data name="DevName" xml:space="preserve">
+    <value>WetterSenseDev</value>
+  </data>
+  <data name="VersionNumber" xml:space="preserve">
+    <value>0.9.1</value>
+  </data>
+  <data name="ThankYouFormat" xml:space="preserve">
+    <value>Danke für die Nutzung von {0}!</value>
+  </data>
+  <data name="WeatherPoweredBy" xml:space="preserve">
+    <value>Wetterdaten von openweathermap.org</value>
+  </data>
+  <data name="BylineFormat" xml:space="preserve">
+    <value>{0} von {1}</value>
+  </data>
+  <data name="PressAnyKeyExit" xml:space="preserve">
+    <value>Beliebige Taste zum Verlassen drücken.</value>
+  </data>
+  <data name="MailPoweredByFormat" xml:space="preserve">
+    <value>Mail von htmlemail.io &amp; {0}</value>
+  </data>
+  <data name="UninstallPromptFormat" xml:space="preserve">
+    <value>{0} deinstallieren?</value>
+  </data>
+  <data name="CloseAppFormat" xml:space="preserve">
+    <value>Geschlossen: {0}.</value>
+  </data>
+  <data name="CloseAppErrorFormat" xml:space="preserve">
+    <value>Schließen von {0} mit Fehler: {1}</value>
+  </data>
+  <data name="UninstallErrorFormat" xml:space="preserve">
+    <value>Deinstallation von {0} schlug fehl. Fehler: {1}</value>
+  </data>
+  <data name="unitQuery" xml:space="preserve">
+    <value>Geben Sie den Namen des Einheitensystems ein, das Sie verwenden möchten</value>
+  </data>
+  <data name="metric" xml:space="preserve">
+    <value>metrisch</value>
+  </data>
+  <data name="imperial" xml:space="preserve">
+    <value>Imperial</value>
+  </data>
+  <data name="nameOfCity" xml:space="preserve">
+    <value>Geben Sie den Namen der Stadt ein, für die Sie Wetterdaten wünschen.</value>
+  </data>
+  <data name="invalidInput" xml:space="preserve">
+    <value>Ungültige Eingabe.</value>
+  </data>
+  <data name="pressEnterContinue" xml:space="preserve">
+    <value>Drücken Sie die Eingabetaste, um fortzufahren.</value>
+  </data>
+  <data name="errorMessage" xml:space="preserve">
+    <value>Fehler aufgetreten.</value>
+  </data>
+  <data name="theWeatherIn" xml:space="preserve">
+    <value>Das Wetter in</value>
+  </data>
+  <data name="temp" xml:space="preserve">
+    <value>Temperatur</value>
+  </data>
+  <data name="lowestTemp" xml:space="preserve">
+    <value>niedrigste Temperatur</value>
+  </data>
+  <data name="highestTemp" xml:space="preserve">
+    <value>höchste Temperatur</value>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="localSystemTime" xml:space="preserve">
+    <value>lokale Systemzeit</value>
+  </data>
+  <data name="timeAtDestination" xml:space="preserve">
+    <value>Zeit am Zielort</value>
+  </data>
+  <data name="yourWeatherInfo" xml:space="preserve">
+    <value>Ihre Wetterinformationen</value>
+  </data>
+  <data name="mailWanted" xml:space="preserve">
+    <value>Möchten Sie dies per E-Mail erhalten?</value>
+  </data>
+  <data name="mailAddressQuery" xml:space="preserve">
+    <value>Geben Sie Ihre E-Mail-Adresse ein</value>
+  </data>
+  <data name="nameOr" xml:space="preserve">
+    <value>Geben Sie Ihren Namen ein oder geben Sie "nein" ein, um nicht angesprochen zu werden (ohne Anführungszeichen)</value>
+  </data>
+  <data name="mailSuccessMessage" xml:space="preserve">
+    <value>E-Mail erfolgreich gesendet</value>
+  </data>
+  <data name="SelectPreferredLanguage" xml:space="preserve">
+    <value>Bevorzugte Sprache auswählen</value>
+  </data>
+</root>

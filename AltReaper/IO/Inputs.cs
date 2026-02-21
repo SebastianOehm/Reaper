@@ -12,20 +12,16 @@ using static System.Console;
  * port
  * bcc
 */
-namespace Reaper
+namespace Reaper.IO
 {
     internal class Inputs
     {
-        public static String configReader()
+        public static string configReader()
         {
             return File.ReadAllText(globalVars.cfgLoc);
         }
-        public static String langHandler(String langPreferenceLong)
-        {
-            //importing selected language file
-            return File.ReadAllText($"{globalVars.tree}{langPreferenceLong}Text.json");
-        }
-        public static async Task<WeatherResponse.root> APICall(String city, String langPreferenceShort, String unitPreference, String APIKey)
+
+        public static async Task<WeatherResponse.root> APICall(string city, string langPreferenceShort, string unitPreference, string APIKey)
         {
             //Use default system proxy settings
             IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
@@ -42,7 +38,7 @@ namespace Reaper
             return await client.GetFromJsonAsync<WeatherResponse.root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}");
         }
 
-        public static bool configGen(JsonHandling.langVal langValue, JsonHandling.config config)
+        public static bool configGen(JsonHandling.config config)
         {
             //checks if config file exists and if all lines have information
             if (File.Exists(globalVars.cfgLoc) && Checks.cfgChecker(config) == false) { return true; }
@@ -63,7 +59,7 @@ namespace Reaper
             ForegroundColor = ConsoleColor.White;
             string portNumber = ReadLine();
             ForegroundColor = ConsoleColor.Green;
-            Write($"\nEnter the mail address of the BCC archive mail or type \"{langValue.no}\" (without quotes) \n>");
+            Write($"\nEnter the mail address of the BCC archive mail or type \"{Properties.Resources.NoOption}\" (without quotes) \n>");
             ForegroundColor = ConsoleColor.White;
             string BCC = ReadLine();
             CursorVisible = false;
@@ -80,12 +76,12 @@ namespace Reaper
             File.WriteAllText(globalVars.cfgLoc, JsonSerializer.Serialize(json));
             return true;
         }
-        public static string UnitPreference(JsonHandling.langVal langValue)
+        public static string UnitPreference()
         {
             //gets unit preference
-            string[] unitOptions = { langValue.metric, langValue.imperial };
-            Menu unitMenu = new(langValue.unitQuery, unitOptions);
-            return unitMenu.IRExcecute() == 0 ? "metric" : "imperial";
+            string[] unitOptions = { Properties.Resources.metric, Properties.Resources.imperial };
+            Menu unitMenu = new(Properties.Resources.unitQuery, unitOptions);
+            return unitMenu.IRExecute() == 0 ? "metric" : "imperial";
         }
         public static void ConfigGetter()
         {
@@ -108,20 +104,17 @@ namespace Reaper
                 File.WriteAllText(globalVars.cfgLoc, JsonSerializer.Serialize(tmp));
             }
         }
-        public static String langPreference()
+        public static string langPreference()
         {
             List<string> availableLanguages = new();
-            foreach (string l in globalVars.fullySupportedLanguages)
+            foreach (string l in globalVars.appLanguages)
             {
-                if (File.Exists($"{globalVars.tree}{l}Text.json"))
-                {
-                    availableLanguages.Add($"{char.ToUpper(l[0]) + l.Substring(1)}");
-                }
+                availableLanguages.Add(l);
             }
 
-            Menu languageMenu = new Menu("Please select your desired language or \"new\" to implement a new language", availableLanguages.ToArray());
+            Menu languageMenu = new(Properties.Resources.SelectPreferredLanguage, availableLanguages.ToArray());
             string spacer = "-------------------------";
-            string selectedLanguage = languageMenu.SRExcecute();
+            string selectedLanguage = languageMenu.SRExecute();
             WriteLine($"\n{spacer}\n");
             WriteLine($"using {selectedLanguage}");
             WriteLine($"\n{spacer}");

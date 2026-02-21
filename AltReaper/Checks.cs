@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Net;
+﻿using System.Net;
 using System.Net.NetworkInformation;
 using static System.Console;
 
@@ -10,17 +9,17 @@ namespace Reaper
         public static bool cfgChecker(JsonHandling.config config)
         {
             bool[] bools = {
-                String.IsNullOrEmpty(config.apiKey),
-                String.IsNullOrEmpty(config.senderMail),
-                String.IsNullOrEmpty(config.senderMailPassword),
-                String.IsNullOrEmpty(config.hostDomain),
-                String.IsNullOrEmpty(config.portNumber),
+                string.IsNullOrEmpty(config.apiKey),
+                string.IsNullOrEmpty(config.senderMail),
+                string.IsNullOrEmpty(config.senderMailPassword),
+                string.IsNullOrEmpty(config.hostDomain),
+                string.IsNullOrEmpty(config.portNumber),
                 false,
-                String.IsNullOrEmpty(config.bcc)
+                string.IsNullOrEmpty(config.bcc)
             };
             try
             {
-                if (int.Parse(config.portNumber) < 0 && int.Parse(config.portNumber) > 65535)
+                if (int.Parse(config.portNumber) < 0 || int.Parse(config.portNumber) > 65535)
                 { bools[5] = true; }
             }
             catch { return true; }
@@ -38,39 +37,51 @@ namespace Reaper
             PingReply googleReply = googlePing.Send("8.8.8.8");
             if (cloudflareReply.Status == IPStatus.Success | googleReply.Status == IPStatus.Success)
             {
-                WriteLine("Device is online");
+                WriteLine(Properties.Resources.DeviceOnline);
             } else
             {
-                WriteLine(@"      
-Your device is not connected to the internet.
-This application needs internet access.
-Please connect your device to the internet to use this application.");
+                WriteLine(Properties.Resources.DeviceOfflineDetails);
                 Helper.Closer();
             }
         }
         public static void APIisOnline()
         {
-            //force internal output to be english
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
             defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.openweathermap.org/data/2.5/weather?q=London");
-                request.Proxy = defaultWebProxy;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                response.Close();
+                var handler = new HttpClientHandler
+                {
+                    Proxy = defaultWebProxy,
+                    UseProxy = true,
+                    DefaultProxyCredentials = CredentialCache.DefaultCredentials
+                };
+
+                using var client = new HttpClient(handler);
+                client.Timeout = TimeSpan.FromSeconds(10);
+
+                HttpResponseMessage response = client.GetAsync("https://api.openweathermap.org/data/2.5/weather?q=London").GetAwaiter().GetResult();
+
+                // Treat HTTP 401 (Unauthorized) as online (API reachable but invalid key)
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    WriteLine(Properties.Resources.ApiOnline);
+                    return;
+                }
+
+                // Any other HTTP response (including successful 200) is treated as offline for this check
+                WriteLine(Properties.Resources.ApiOffline);
+                Helper.Closer();
             }
-            catch (WebException e)
+            catch (HttpRequestException e)
             {
-                if (e.Message.Equals("The remote server returned an error: (401) Unauthorized.", StringComparison.InvariantCultureIgnoreCase)) 
-                { WriteLine("API is online"); }
-                else { WriteLine("API is not online. Please try again later."); Helper.Closer(); }
+                // network-level error (DNS, timeout, connection failure, etc.)
+                WriteLine(string.Format(Properties.Resources.NetworkErrorFormat, e.Message));
+                Helper.Closer();
             }
             catch (Exception e)
             {
-                WriteLine("\nThe following Exception was raised : {0}", e.Message);
+                WriteLine(string.Format(Properties.Resources.ExceptionRaisedFormat, e.Message));
             }
         }
     }
@@ -95,28 +106,28 @@ Please connect your device to the internet to use this application.");
                 if (counter == Index)
                 {
                     prefix = ">";
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.ForegroundColor = ConsoleColor.Black;
+                    BackgroundColor = ConsoleColor.White;
+                    ForegroundColor = ConsoleColor.Black;
                 }
                 else
                 {
                     prefix = " ";
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.ForegroundColor = ConsoleColor.White;
+                    BackgroundColor = ConsoleColor.Black;
+                    ForegroundColor = ConsoleColor.White;
                 }
-                Console.WriteLine($"{prefix} {currentOption}");
+                WriteLine($"{prefix} {currentOption}");
             }
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Green;
+            BackgroundColor = ConsoleColor.Black;
+            ForegroundColor = ConsoleColor.Green;
         }
-        public int IRExcecute()
+        public int IRExecute()
         {
             ConsoleKey pressedKey;
             do
             {
-                Console.Clear();
+                Clear();
                 DisplayAvailableOptions();
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                ConsoleKeyInfo keyInfo = ReadKey(true);
                 pressedKey = keyInfo.Key;
 
                 if (pressedKey == ConsoleKey.UpArrow ^ pressedKey == ConsoleKey.W)
@@ -138,14 +149,14 @@ Please connect your device to the internet to use this application.");
             } while (pressedKey != ConsoleKey.Enter);
             return Index;
         }
-        public String SRExcecute()
+        public string SRExecute()
         {
             ConsoleKey pressedKey;
             do
             {
-                Console.Clear();
+                Clear();
                 DisplayAvailableOptions();
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                ConsoleKeyInfo keyInfo = ReadKey(true);
                 pressedKey = keyInfo.Key;
 
                 if (pressedKey == ConsoleKey.UpArrow ^ pressedKey == ConsoleKey.W)

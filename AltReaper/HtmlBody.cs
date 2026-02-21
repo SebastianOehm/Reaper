@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using static Reaper.JsonHandling;
-using System.Xml.Linq;
-
-namespace Reaper
+﻿namespace Reaper
 {
     internal class HtmlBody
     {
-        public static string getBody(string[] content, string easterEgg, string name, config config)
+        public static string getBody(string[] content, string easterEgg, string name, JsonHandling.config config)
         {
             string htmlBody = 
                 $"<!doctype html>\r\n" +

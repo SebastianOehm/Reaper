@@ -1,16 +1,13 @@
-﻿using System.Globalization;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using static System.Console;
 
-namespace Reaper
+namespace Reaper.IO
 {
     internal class Outputs
     {
-        public static String[] WeatherOutput(WeatherResponse.root weatherData, String unitPreference, JsonHandling.langVal langValue)
+        public static string[] WeatherOutput(WeatherResponse.root weatherData, string unitPreference)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-DE");
             //time & timezones, units
             char unitSymbol;
             DateTime localSystemTime = DateTime.Now;
@@ -21,31 +18,31 @@ namespace Reaper
             unitSymbol = unitPreference == "metric" ? 'c' : 'f';
 
             //main output
-            List<String> content = new();
+            List<string> content = new();
             string spacer = "\n-------------------------------------\n";
             content.Add(spacer);
-            content.Add($"{langValue.theWeatherIn}: {weatherData.name}, {weatherData.sys.country}");
-            content.Add($"{langValue.localSystemTime}: {localSystemTime}");
-            content.Add($"{langValue.timeAtDestination}: : {locTime} {timezoneUTC} ");
-            content.Add($"{langValue.temp}: {weatherData.main.temp:0.#}°{unitSymbol}");
-            content.Add($"{langValue.lowestTemp}: {weatherData.main.temp_min:0.#}°{unitSymbol}");
-            content.Add($"{langValue.highestTemp}: {weatherData.main.temp_max:0.#}°{unitSymbol}");
-            content.Add($"{langValue.description}: {weatherData.weather[0].description}");
+            content.Add($"{Properties.Resources.theWeatherIn}: {weatherData.name}, {weatherData.sys.country}");
+            content.Add($"{Properties.Resources.localSystemTime}: {localSystemTime}");
+            content.Add($"{Properties.Resources.timeAtDestination}: : {locTime} {timezoneUTC} ");
+            content.Add($"{Properties.Resources.temp}: {weatherData.main.temp:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.lowestTemp}: {weatherData.main.temp_min:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.highestTemp}: {weatherData.main.temp_max:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.description}: {weatherData.weather[0].description}");
             content.Add(spacer);
             string[] cArray = content.ToArray();
-            WriteLine(String.Join("\r\n", cArray));
-            WriteLine(langValue.pressEnterContinue);
+            WriteLine(string.Join("\r\n", cArray));
+            WriteLine(Properties.Resources.pressEnterContinue);
             while (ReadKey(true).Key != ConsoleKey.Enter) { continue; }
             return cArray;
         }
-        public static bool MailOutput(String recipient, String subjectLine, String[] content, JsonHandling.langVal langValue, JsonHandling.config config)
+        public static bool MailOutput(string recipient, string subjectLine, string[] content, JsonHandling.config config)
         {
             //Set salutation
-            Write($"\n{langValue.nameOr}\n>");
+            Write($"\n{Properties.Resources.nameOr}\n>");
             CursorVisible = true;
             ForegroundColor = ConsoleColor.White;
-            string name = ReadLine();
-            if (name == langValue.no) { name = ""; }
+            string? name = ReadLine();
+            if (name == Properties.Resources.NoOption || string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) { name = ""; }
             ForegroundColor = ConsoleColor.Green;
             CursorVisible = false;
             //Set smtp config
@@ -70,14 +67,13 @@ namespace Reaper
             mailMessage.To.Add(recipient);
 
             //Set bcc for analysation/archivating usage
-            if (config.bcc == langValue.no) { }
+            if (config.bcc == Properties.Resources.NoOption) { }
             else { mailMessage.Bcc.Add(config.bcc); }
 
             //sending
             try { smtpClient.Send(mailMessage); }
-            catch
+            catch (Exception mail)
             {
-                Exception mail = new Exception();
                 WriteLine(mail.Message);
                 return false;
             }

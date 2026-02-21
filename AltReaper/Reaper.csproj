@@ -11,4 +11,28 @@
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <!-- Main resources file: enable design-time code generation. Use Update to modify implicit items. -->
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <!-- Satellite culture file: mark as dependent upon the main resx and with culture -->
+    <EmbeddedResource Update="Properties\Resources.de.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <WithCulture>true</WithCulture>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Tell VS that the designer file (when generated) is auto-generated and design-time. Use Update to avoid adding a new Compile item. -->
+
 </Project>
