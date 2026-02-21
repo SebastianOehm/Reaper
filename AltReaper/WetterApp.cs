@@ -40,7 +40,6 @@ namespace Reaper
             else { Write(Properties.Resources.ContinuingStandardMode); }
 
             string chosenLanguage = Inputs.langPreference();
-            // Load language values from RESX via LanguageLoader
             (string apiCode, CultureInfo culture) = LanguageLoader.Load(chosenLanguage);
             Thread.CurrentThread.CurrentUICulture = culture;
             Thread.CurrentThread.CurrentCulture = culture;

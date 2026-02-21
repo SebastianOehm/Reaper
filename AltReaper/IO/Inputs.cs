@@ -16,11 +16,6 @@ namespace Reaper.IO
 {
     internal class Inputs
     {
-        public static string configReader()
-        {
-            return File.ReadAllText(globalVars.cfgLoc);
-        }
-
         public static async Task<WeatherResponse.root> APICall(string city, string langPreferenceShort, string unitPreference, string APIKey)
         {
             //Use default system proxy settings
