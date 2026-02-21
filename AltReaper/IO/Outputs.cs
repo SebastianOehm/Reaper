@@ -59,7 +59,7 @@ namespace Reaper.IO
                 Priority = MailPriority.Low,
                 Subject = subjectLine,
                 IsBodyHtml = true,
-                Body = HtmlBody.getBody(content,globalVars.easterEgg,name,config)
+                Body = HtmlBody.getBody(content, globalVars.easterEgg, name, config)
             };
 
             //Set recipient
