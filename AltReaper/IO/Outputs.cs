@@ -53,14 +53,13 @@ namespace Reaper.IO
             };
 
             //Set smtp content
-            string easterEgg = "https://bit.ly/3Gpgiyh";
             var mailMessage = new MailMessage()
             {
                 From = new MailAddress(config.senderMail),
                 Priority = MailPriority.Low,
                 Subject = subjectLine,
                 IsBodyHtml = true,
-                Body = HtmlBody.getBody(content,easterEgg,name,config)
+                Body = HtmlBody.getBody(content,globalVars.easterEgg,name,config)
             };
 
             //Set recipient

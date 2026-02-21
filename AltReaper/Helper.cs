@@ -15,7 +15,7 @@ namespace Reaper
         public static string[] devData = { Properties.Resources.AppName, Properties.Resources.DevName };
         public static string baseLoc = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\Reaper";
         public static string cfgLoc = $"{baseLoc}\\config.json";
-
+        public static string easterEgg = "https://bit.ly/3Gpgiyh";
         // App visible languages and mapping to OpenWeatherMap API codes / culture names.
         // Keep small for now: English and German only.
         public static string[] appLanguages = { "English", "German" };
