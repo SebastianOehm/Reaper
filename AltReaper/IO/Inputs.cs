@@ -25,7 +25,7 @@ namespace Reaper.IO
             {
                 Proxy = defaultWebProxy,
             };
-            HttpClient client = new()
+            HttpClient client = new(handler)
             {
                 BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"),
             };
@@ -89,8 +89,10 @@ namespace Reaper.IO
         }
         public static void ConfigGetter()
         {
-            JsonHandling.Config test = null;
-            try { test = JsonSerializer.Deserialize<JsonHandling.Config>(File.ReadAllText(GlobalVars.cfgLoc)); }
+            try
+            {
+                _ = JsonSerializer.Deserialize<JsonHandling.Config>(File.ReadAllText(GlobalVars.cfgLoc));
+            }
             catch { File.Delete(GlobalVars.cfgLoc); }
             if (!File.Exists(GlobalVars.cfgLoc))
             {

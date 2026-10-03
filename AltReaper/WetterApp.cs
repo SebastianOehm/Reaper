@@ -9,7 +9,7 @@ namespace Reaper
 {
     public static class Program
     {
-        public static void Main(String[] args)
+        public static void Main()
         {
 
             Title = string.Format(Properties.Resources.AppTitleFormat, Properties.Resources.AppName, Properties.Resources.VersionNumber);

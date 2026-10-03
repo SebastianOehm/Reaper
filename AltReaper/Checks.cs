@@ -87,8 +87,8 @@ namespace Reaper
     class Menu
     {
         private int Index;
-        private string[] Options;
-        private string InputPrompt;
+        private readonly string[] Options;
+        private readonly string InputPrompt;
         public Menu(string inputPrompt, string[] options)
         {
             InputPrompt = inputPrompt;
