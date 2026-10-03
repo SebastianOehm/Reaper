@@ -8,13 +8,13 @@ namespace Reaper
     public static class GlobalVars
     {
         // Load application metadata from resources
-        public static readonly string[] devData = { Properties.Resources.AppName, Properties.Resources.DevName };
+        public static readonly string[] devData = [Properties.Resources.AppName, Properties.Resources.DevName];
         public static readonly string baseLoc = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\Reaper";
         public static readonly string cfgLoc = $"{baseLoc}\\config.json";
         public static readonly string easterEgg = "https://bit.ly/3Gpgiyh";
         // App visible languages and mapping to OpenWeatherMap API codes / culture names.
         // Keep small for now: English and German only.
-        public static readonly string[] appLanguages = { "English", "German" };
+        public static readonly string[] appLanguages = ["English", "German"];
         public static readonly Dictionary<string, string> appToApiCode = new()
         {
             { "English", "en" },
@@ -31,7 +31,7 @@ namespace Reaper
     {
         public static void MailOption(JsonHandling.Config config, String[] content)
         {
-            string[] mailOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
+            string[] mailOptions = [Properties.Resources.YesOption, Properties.Resources.NoOption];
             Menu mailMenu = new(Properties.Resources.mailWanted, mailOptions);
 
             if (mailMenu.IRExecute() == 0)
@@ -125,7 +125,7 @@ namespace Reaper
         public static void Uninstaller()
         {
             string uninstallPrompt = string.Format(Properties.Resources.UninstallPromptFormat, GlobalVars.devData[0]);
-            string[] uninstallOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
+            string[] uninstallOptions = [Properties.Resources.YesOption, Properties.Resources.NoOption];
             Menu uninstallMenu = new(uninstallPrompt, uninstallOptions);
             int uninstallChoice = uninstallMenu.IRExecute();
             if (uninstallChoice == 0)

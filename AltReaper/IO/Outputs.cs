@@ -18,7 +18,7 @@ namespace Reaper.IO
             unitSymbol = unitPreference == "metric" ? 'c' : 'f';
 
             //main output
-            List<string> content = new();
+            List<string> content = [];
             string spacer = "\n-------------------------------------\n";
             content.Add(spacer);
             content.Add($"{Properties.Resources.theWeatherIn}: {weatherData.Name}, {weatherData.Sys.Country}");
@@ -29,7 +29,7 @@ namespace Reaper.IO
             content.Add($"{Properties.Resources.highestTemp}: {weatherData.Main.TempMax:0.#}°{unitSymbol}");
             content.Add($"{Properties.Resources.description}: {weatherData.Weather[0].Description}");
             content.Add(spacer);
-            string[] cArray = content.ToArray();
+            string[] cArray = [.. content];
             WriteLine(string.Join("\r\n", cArray));
             WriteLine(Properties.Resources.pressEnterContinue);
             while (ReadKey(true).Key != ConsoleKey.Enter) { continue; }

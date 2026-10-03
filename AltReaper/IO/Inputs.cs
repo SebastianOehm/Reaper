@@ -56,7 +56,7 @@ namespace Reaper.IO
             ForegroundColor = ConsoleColor.Green;
             //empty bcc means no BCC mail
             string BCC = "";
-            string[] bccOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
+            string[] bccOptions = [Properties.Resources.YesOption, Properties.Resources.NoOption];
             Menu bccMenu = new(Properties.Resources.bccWanted, bccOptions);
             if (bccMenu.IRExecute() == 0)
             {
@@ -83,7 +83,7 @@ namespace Reaper.IO
         public static string UnitPreference()
         {
             //gets unit preference
-            string[] unitOptions = { Properties.Resources.metric, Properties.Resources.imperial };
+            string[] unitOptions = [Properties.Resources.metric, Properties.Resources.imperial];
             Menu unitMenu = new(Properties.Resources.unitQuery, unitOptions);
             return unitMenu.IRExecute() == 0 ? "metric" : "imperial";
         }
@@ -112,13 +112,9 @@ namespace Reaper.IO
         }
         public static string LangPreference()
         {
-            List<string> availableLanguages = new();
-            foreach (string l in GlobalVars.appLanguages)
-            {
-                availableLanguages.Add(l);
-            }
+            List<string> availableLanguages = [.. GlobalVars.appLanguages];
 
-            Menu languageMenu = new(Properties.Resources.SelectPreferredLanguage, availableLanguages.ToArray());
+            Menu languageMenu = new(Properties.Resources.SelectPreferredLanguage, [.. availableLanguages]);
             string spacer = "-------------------------";
             string selectedLanguage = languageMenu.SRExecute();
             WriteLine($"\n{spacer}\n");

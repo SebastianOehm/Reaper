@@ -21,7 +21,7 @@ namespace Reaper
             Checks.DeviceIsOnline();
             Checks.APIisOnline();
 
-            string[] superUserOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
+            string[] superUserOptions = [Properties.Resources.YesOption, Properties.Resources.NoOption];
             Menu superUser = new(Properties.Resources.SuperUserQuestion, superUserOptions);
 
             if (superUser.IRExecute() == 0)

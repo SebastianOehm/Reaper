@@ -8,14 +8,14 @@ namespace Reaper
     {
         public static bool CfgChecker(JsonHandling.Config config)
         {
-            bool[] bools = {
+            bool[] bools = [
                 string.IsNullOrEmpty(config.ApiKey),
                 string.IsNullOrEmpty(config.SenderMail),
                 string.IsNullOrEmpty(config.SenderMailPassword),
                 string.IsNullOrEmpty(config.HostDomain),
                 string.IsNullOrEmpty(config.PortNumber),
                 false
-            };
+            ];
             try
             {
                 if (int.Parse(config.PortNumber) < 0 || int.Parse(config.PortNumber) > 65535)
@@ -84,17 +84,12 @@ namespace Reaper
             }
         }
     }
-    class Menu
+    class Menu(string inputPrompt, string[] options)
     {
-        private int Index;
-        private readonly string[] Options;
-        private readonly string InputPrompt;
-        public Menu(string inputPrompt, string[] options)
-        {
-            InputPrompt = inputPrompt;
-            Options = options;
-            Index = 0;
-        }
+        private int Index = 0;
+        private readonly string[] Options = options;
+        private readonly string InputPrompt = inputPrompt;
+
         public void DisplayAvailableOptions()
         {
             Console.WriteLine(InputPrompt);
