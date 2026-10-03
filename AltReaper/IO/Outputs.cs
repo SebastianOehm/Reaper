@@ -1,83 +1,81 @@
-﻿using System.Globalization;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using static System.Console;
 
-namespace Reaper
+namespace Reaper.IO
 {
     internal class Outputs
     {
-        public static String[] WeatherOutput(WeatherResponse.root weatherData, String unitPreference, JsonHandling.langVal langValue)
+        public static string[] WeatherOutput(WeatherResponse.Root weatherData, string unitPreference)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-DE");
             //time & timezones, units
             char unitSymbol;
             DateTime localSystemTime = DateTime.Now;
-            int timeZoneShiftFromUTC = weatherData.timezone / 3600;
+            int timeZoneShiftFromUTC = weatherData.Timezone / 3600;
             string timezoneUTC;
             DateTime locTime = DateTime.UtcNow.AddHours(timeZoneShiftFromUTC);
             timezoneUTC = timeZoneShiftFromUTC >= 0 ? $"UTC+{timeZoneShiftFromUTC}" : $"UTC{timeZoneShiftFromUTC}" ;
             unitSymbol = unitPreference == "metric" ? 'c' : 'f';
 
             //main output
-            List<String> content = new();
+            List<string> content = [];
             string spacer = "\n-------------------------------------\n";
             content.Add(spacer);
-            content.Add($"{langValue.theWeatherIn}: {weatherData.name}, {weatherData.sys.country}");
-            content.Add($"{langValue.localSystemTime}: {localSystemTime}");
-            content.Add($"{langValue.timeAtDestination}: : {locTime} {timezoneUTC} ");
-            content.Add($"{langValue.temp}: {weatherData.main.temp:0.#}°{unitSymbol}");
-            content.Add($"{langValue.lowestTemp}: {weatherData.main.temp_min:0.#}°{unitSymbol}");
-            content.Add($"{langValue.highestTemp}: {weatherData.main.temp_max:0.#}°{unitSymbol}");
-            content.Add($"{langValue.description}: {weatherData.weather[0].description}");
+            content.Add($"{Properties.Resources.theWeatherIn}: {weatherData.Name}, {weatherData.Sys.Country}");
+            content.Add($"{Properties.Resources.localSystemTime}: {localSystemTime}");
+            content.Add($"{Properties.Resources.timeAtDestination}: : {locTime} {timezoneUTC} ");
+            content.Add($"{Properties.Resources.temp}: {weatherData.Main.Temp:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.lowestTemp}: {weatherData.Main.TempMin:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.highestTemp}: {weatherData.Main.TempMax:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.description}: {weatherData.Weather[0].Description}");
             content.Add(spacer);
-            string[] cArray = content.ToArray();
-            WriteLine(String.Join("\r\n", cArray));
-            WriteLine(langValue.pressEnterContinue);
+            string[] cArray = [.. content];
+            WriteLine(string.Join("\r\n", cArray));
+            WriteLine(Properties.Resources.pressEnterContinue);
             while (ReadKey(true).Key != ConsoleKey.Enter) { continue; }
             return cArray;
         }
-        public static bool MailOutput(String recipient, String subjectLine, String[] content, JsonHandling.langVal langValue, JsonHandling.config config)
+        public static bool MailOutput(string recipient, string subjectLine, string[] content, JsonHandling.Config config)
         {
             //Set salutation
-            Write($"\n{langValue.nameOr}\n>");
+            Write($"\n{Properties.Resources.nameOr}\n>");
             CursorVisible = true;
             ForegroundColor = ConsoleColor.White;
-            string name = ReadLine();
-            if (name == langValue.no) { name = ""; }
+            string? name = ReadLine();
+            if (name == Properties.Resources.NoOption || string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) { name = ""; }
             ForegroundColor = ConsoleColor.Green;
             CursorVisible = false;
             //Set smtp config
-            var smtpClient = new SmtpClient(config.hostDomain, int.Parse(config.portNumber))
+            var smtpClient = new SmtpClient(config.HostDomain, int.Parse(config.PortNumber))
             {
-                Credentials = new NetworkCredential(config.senderMail, config.senderMailPassword),
+                Credentials = new NetworkCredential(config.SenderMail, config.SenderMailPassword),
                 EnableSsl = true,
             };
 
             //Set smtp content
-            string easterEgg = "https://bit.ly/3Gpgiyh";
             var mailMessage = new MailMessage()
             {
-                From = new MailAddress(config.senderMail),
+                From = new MailAddress(config.SenderMail),
                 Priority = MailPriority.Low,
                 Subject = subjectLine,
                 IsBodyHtml = true,
-                Body = HtmlBody.getBody(content,easterEgg,name,config)
+                Body = HtmlBody.GetBody(content, GlobalVars.easterEgg, name, config)
             };
 
             //Set recipient
             mailMessage.To.Add(recipient);
 
             //Set bcc for analysation/archivating usage
-            if (config.bcc == langValue.no) { }
-            else { mailMessage.Bcc.Add(config.bcc); }
+            //empty bcc means no BCC mail. Older configs stored the localized "no" instead, so accept that of every app language
+            bool noBcc = string.IsNullOrWhiteSpace(config.Bcc) || GlobalVars.appToCulture.Values.Any(c =>
+                config.Bcc == Properties.Resources.ResourceManager.GetString(nameof(Properties.Resources.NoOption), new System.Globalization.CultureInfo(c)));
+            if (noBcc) { }
+            else { mailMessage.Bcc.Add(config.Bcc); }
 
             //sending
             try { smtpClient.Send(mailMessage); }
-            catch
+            catch (Exception mail)
             {
-                Exception mail = new Exception();
                 WriteLine(mail.Message);
                 return false;
             }

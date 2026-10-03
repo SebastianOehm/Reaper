@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using static Reaper.JsonHandling;
-using System.Xml.Linq;
-
-namespace Reaper
+﻿namespace Reaper
 {
     internal class HtmlBody
     {
-        public static string getBody(string[] content, string easterEgg, string name, config config)
+        public static string GetBody(string[] content, string easterEgg, string name, JsonHandling.Config config)
         {
             string htmlBody = 
                 $"<!doctype html>\r\n" +
@@ -28,7 +19,7 @@ namespace Reaper
                 $"\r\n<!-- END CENTERED WHITE CONTAINER -->\r\n\r\n<!-- START FOOTER -->\r\n" +
                 $"<div class=\"footer\" style=\"clear: both; text-align: center; width: 100%;\">\r\n<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">\r\n<tr>\r\n<td class=\"content-block\" style=\"font-family: sans-serif; vertical-align: color: #999999; font-size: 12px; text-align: center;\" valign=\"top\" align=\"center\">\r\n" +
                 $"<br> Don't like these emails? <a href=\"{easterEgg}\" style=\"text-decoration: underline; color: #999999; font-size: 12px; text-align: center;\">Unsubscribe</a>.\r\n </td>\r\n  </tr>\r\n <tr>\r\n " +
-                $"<td class=\"content-block powered-by\" style=\"font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #999999; font-size: 12px; text-align: center;\" valign=\"top\" align=\"center\">\r\n  Powered by <a href=\"http://htmlemail.io \" style=\"color: #999999; font-size: 12px; text-align: center; text-decoration: none;\">htmlemail</a> & <a href=\"http://{config.senderMail.Split('@')[1]} \" style=\"color: #999999; font-size: 12px; text-align: center; text-decoration: none;\">{config.senderMail.Split('@')[1].Split('.')[0]}</a>.\r\n </td>\r\n  </tr>\r\n  </table>\r\n  " +
+                $"<td class=\"content-block powered-by\" style=\"font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #999999; font-size: 12px; text-align: center;\" valign=\"top\" align=\"center\">\r\n  Powered by <a href=\"http://htmlemail.io \" style=\"color: #999999; font-size: 12px; text-align: center; text-decoration: none;\">htmlemail</a> & <a href=\"http://{config.SenderMail.Split('@')[1]} \" style=\"color: #999999; font-size: 12px; text-align: center; text-decoration: none;\">{config.SenderMail.Split('@')[1].Split('.')[0]}</a>.\r\n </td>\r\n  </tr>\r\n  </table>\r\n  " +
                 $"</div>\r\n <!-- END FOOTER -->\r\n\r\n</div>\r\n" +
                 $"</td>\r\n <td style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">&nbsp;</td>\r\n</tr>\r\n</table>\r\n" +
                 $"</body>\r\n" +
