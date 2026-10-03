@@ -11,16 +11,14 @@ namespace Reaper.IO
             string selectedDisplay = string.IsNullOrEmpty(selectedLanguageDisplay) ? "English" : selectedLanguageDisplay;
 
             // Determine culture name and API code using app-level mappings
-            string cultureName = "en";
-            if (Reaper.GlobalVars.appToCulture != null && Reaper.GlobalVars.appToCulture.ContainsKey(selectedDisplay))
+            if (!Reaper.GlobalVars.appToCulture.TryGetValue(selectedDisplay, out string? cultureName))
             {
-                cultureName = Reaper.GlobalVars.appToCulture[selectedDisplay];
+                cultureName = "en";
             }
 
-            string apiCode = "en";
-            if (Reaper.GlobalVars.appToApiCode != null && Reaper.GlobalVars.appToApiCode.ContainsKey(selectedDisplay))
+            if (!Reaper.GlobalVars.appToApiCode.TryGetValue(selectedDisplay, out string? apiCode))
             {
-                apiCode = Reaper.GlobalVars.appToApiCode[selectedDisplay];
+                apiCode = "en";
             }
 
             CultureInfo culture = CultureInfo.InvariantCulture;
