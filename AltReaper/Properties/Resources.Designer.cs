@@ -200,15 +200,6 @@ namespace Reaper.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die afrikaans|albanian|arabic|azerbaijani|bulgarian|catalan|czech|danish|german|greek|english|basque|persian|farsi|finnish|french|galician|Hebrew|hindi|croatian|hungarian|indonesian|italian|japanese|korean|latvian|lithuanian|macedonian|norwegian|dutch|polish|portuguese|romanian|russian|swedish|slovak|slovenian|spanish|serbian|thai|turkish|ukrainian|vietnamese|chinese simplified|chinese traditional|zulu ähnelt.
-        /// </summary>
-        public static string FullySupportedLanguages {
-            get {
-                return ResourceManager.GetString("FullySupportedLanguages", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die highest temperature ähnelt.
         /// </summary>
         public static string highestTemp {
@@ -388,16 +379,6 @@ namespace Reaper.Properties {
             }
         }
         
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die af|al|ar|az|bg|ca|cz|da|de|el|en|eu|fa|fa|fi|fr|gl|he|hi|hr|hu|id|it|ja|kr|la|lt|mk|no|nl|pl|pt|pt_br|ro|ru|se|sk|sl|sr|th|tr|ua|vi|zh_cn|zh_tw|zu ähnelt.
-        /// </summary>
-        public static string SupportedShortCodes {
-            get {
-                return ResourceManager.GetString("SupportedShortCodes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die temperature ähnelt.
         /// </summary>
         public static string temp {

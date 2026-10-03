@@ -7,11 +7,7 @@ namespace Reaper
 {
     public static class globalVars
     {
-        // Load language lists and application metadata from resources (null-safe)
-        public static string[] fullySupportedLanguages = (Properties.Resources.ResourceManager.GetString("FullySupportedLanguages") ?? string.Empty)
-            .Split('|', StringSplitOptions.RemoveEmptyEntries);
-        public static string[] supportedShortCodes = (Properties.Resources.ResourceManager.GetString("SupportedShortCodes") ?? string.Empty)
-            .Split('|', StringSplitOptions.RemoveEmptyEntries);
+        // Load application metadata from resources
         public static string[] devData = { Properties.Resources.AppName, Properties.Resources.DevName };
         public static string baseLoc = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\Reaper";
         public static string cfgLoc = $"{baseLoc}\\config.json";

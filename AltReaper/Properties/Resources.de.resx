@@ -158,12 +158,6 @@ Bitte verbinden Sie Ihr Gerät mit dem Internet, um diese Anwendung zu benutzen.
   <data name="ContinuingStandardMode" xml:space="preserve">
     <value>Wird im Standardmodus fortgesetzt</value>
   </data>
-  <data name="FullySupportedLanguages" xml:space="preserve">
-    <value>afrikaans|albanian|arabic|azerbaijani|bulgarian|catalan|czech|danish|german|greek|english|basque|persian|farsi|finnish|french|galician|Hebrew|hindi|croatian|hungarian|indonesian|italian|japanese|korean|latvian|lithuanian|macedonian|norwegian|dutch|polish|portuguese|romanian|russian|swedish|slovak|slovenian|spanish|serbian|thai|turkish|ukrainian|vietnamese|chinese simplified|chinese traditional|zulu</value>
-  </data>
-  <data name="SupportedShortCodes" xml:space="preserve">
-    <value>af|al|ar|az|bg|ca|cz|da|de|el|en|eu|fa|fa|fi|fr|gl|he|hi|hr|hu|id|it|ja|kr|la|lt|mk|no|nl|pl|pt|pt_br|ro|ru|se|sk|sl|sr|th|tr|ua|vi|zh_cn|zh_tw|zu</value>
-  </data>
   <data name="AppName" xml:space="preserve">
     <value>Reaper</value>
   </data>
