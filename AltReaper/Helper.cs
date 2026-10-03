@@ -8,20 +8,20 @@ namespace Reaper
     public static class GlobalVars
     {
         // Load application metadata from resources
-        public static string[] devData = { Properties.Resources.AppName, Properties.Resources.DevName };
-        public static string baseLoc = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\Reaper";
-        public static string cfgLoc = $"{baseLoc}\\config.json";
-        public static string easterEgg = "https://bit.ly/3Gpgiyh";
+        public static readonly string[] devData = { Properties.Resources.AppName, Properties.Resources.DevName };
+        public static readonly string baseLoc = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\Reaper";
+        public static readonly string cfgLoc = $"{baseLoc}\\config.json";
+        public static readonly string easterEgg = "https://bit.ly/3Gpgiyh";
         // App visible languages and mapping to OpenWeatherMap API codes / culture names.
         // Keep small for now: English and German only.
-        public static string[] appLanguages = { "English", "German" };
-        public static Dictionary<string, string> appToApiCode = new()
+        public static readonly string[] appLanguages = { "English", "German" };
+        public static readonly Dictionary<string, string> appToApiCode = new()
         {
             { "English", "en" },
             { "German", "de" }
         };
         // Map app language display -> culture name used for ResourceManager lookups (use BCP-47 style)
-        public static Dictionary<string, string> appToCulture = new()
+        public static readonly Dictionary<string, string> appToCulture = new()
         {
             { "English", "en" },
             { "German", "de" }
