@@ -72,9 +72,9 @@ namespace Reaper
                 WriteLine(Properties.Resources.ApiOffline);
                 Helper.Closer();
             }
-            catch (HttpRequestException e)
+            catch (Exception e) when (e is HttpRequestException or TaskCanceledException)
             {
-                // network-level error (DNS, timeout, connection failure, etc.)
+                // network-level error (DNS, connection failure) or HttpClient.Timeout, which surfaces as TaskCanceledException
                 WriteLine(string.Format(Properties.Resources.NetworkErrorFormat, e.Message));
                 Helper.Closer();
             }
