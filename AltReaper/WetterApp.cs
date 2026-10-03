@@ -21,6 +21,8 @@ namespace Reaper
             Checks.DeviceIsOnline();
             Checks.APIisOnline();
 
+            Directory.CreateDirectory(GlobalVars.baseLoc);
+
             string[] superUserOptions = [Properties.Resources.YesOption, Properties.Resources.NoOption];
             Menu superUser = new(Properties.Resources.SuperUserQuestion, superUserOptions);
 
