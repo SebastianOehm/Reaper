@@ -281,6 +281,15 @@ namespace Reaper.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Do you want to send a BCC archive mail? ähnelt.
+        /// </summary>
+        public static string bccWanted {
+            get {
+                return ResourceManager.GetString("bccWanted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Do you want this as a mail? ähnelt.
         /// </summary>
         public static string mailWanted {

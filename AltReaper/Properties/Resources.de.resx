@@ -245,6 +245,9 @@ Bitte verbinden Sie Ihr Gerät mit dem Internet, um diese Anwendung zu benutzen.
   <data name="yourWeatherInfo" xml:space="preserve">
     <value>Ihre Wetterinformationen</value>
   </data>
+  <data name="bccWanted" xml:space="preserve">
+    <value>Möchten Sie eine BCC-Archiv-E-Mail senden?</value>
+  </data>
   <data name="mailWanted" xml:space="preserve">
     <value>Möchten Sie dies per E-Mail erhalten?</value>
   </data>

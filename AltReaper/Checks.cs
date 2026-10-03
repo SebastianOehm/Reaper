@@ -14,8 +14,7 @@ namespace Reaper
                 string.IsNullOrEmpty(config.senderMailPassword),
                 string.IsNullOrEmpty(config.hostDomain),
                 string.IsNullOrEmpty(config.portNumber),
-                false,
-                string.IsNullOrEmpty(config.bcc)
+                false
             };
             try
             {

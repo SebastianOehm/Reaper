@@ -54,9 +54,18 @@ namespace Reaper.IO
             ForegroundColor = ConsoleColor.White;
             string portNumber = ReadLine();
             ForegroundColor = ConsoleColor.Green;
-            Write($"\nEnter the mail address of the BCC archive mail or type \"{Properties.Resources.NoOption}\" (without quotes) \n>");
-            ForegroundColor = ConsoleColor.White;
-            string BCC = ReadLine();
+            //empty bcc means no BCC mail
+            string BCC = "";
+            string[] bccOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
+            Menu bccMenu = new(Properties.Resources.bccWanted, bccOptions);
+            if (bccMenu.IRExecute() == 0)
+            {
+                Write("\nEnter the mail address of the BCC archive mail\n>");
+                CursorVisible = true;
+                ForegroundColor = ConsoleColor.White;
+                BCC = ReadLine();
+                ForegroundColor = ConsoleColor.Green;
+            }
             CursorVisible = false;
 
             var json = new JsonHandling.config

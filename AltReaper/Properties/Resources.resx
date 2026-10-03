@@ -247,6 +247,9 @@ The following Exception was raised : {0}</value>
   <data name="yourWeatherInfo" xml:space="preserve">
     <value>your weather info</value>
   </data>
+  <data name="bccWanted" xml:space="preserve">
+    <value>Do you want to send a BCC archive mail?</value>
+  </data>
   <data name="mailWanted" xml:space="preserve">
     <value>Do you want this as a mail?</value>
   </data>

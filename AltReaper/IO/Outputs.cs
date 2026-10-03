@@ -66,7 +66,10 @@ namespace Reaper.IO
             mailMessage.To.Add(recipient);
 
             //Set bcc for analysation/archivating usage
-            if (config.bcc == Properties.Resources.NoOption) { }
+            //empty bcc means no BCC mail. Older configs stored the localized "no" instead, so accept that of every app language
+            bool noBcc = string.IsNullOrWhiteSpace(config.bcc) || globalVars.appToCulture.Values.Any(c =>
+                config.bcc == Properties.Resources.ResourceManager.GetString(nameof(Properties.Resources.NoOption), new System.Globalization.CultureInfo(c)));
+            if (noBcc) { }
             else { mailMessage.Bcc.Add(config.bcc); }
 
             //sending
