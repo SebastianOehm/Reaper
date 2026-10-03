@@ -45,8 +45,8 @@ namespace Reaper
         }
         public static void APIisOnline()
         {
-            IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
-            defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
+            IWebProxy? defaultWebProxy = WebRequest.DefaultWebProxy;
+            defaultWebProxy?.Credentials = CredentialCache.DefaultCredentials;
             try
             {
                 var handler = new HttpClientHandler

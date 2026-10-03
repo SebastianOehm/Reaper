@@ -47,7 +47,7 @@ namespace Reaper
             Thread.CurrentThread.CurrentCulture = culture;
 
             Inputs.ConfigGetter();
-            Config config = JsonSerializer.Deserialize<Config>(File.ReadAllText(GlobalVars.cfgLoc));
+            Config config = JsonSerializer.Deserialize<Config>(File.ReadAllText(GlobalVars.cfgLoc))!;
 
 
             string unitPreference = Inputs.UnitPreference();
@@ -71,7 +71,7 @@ namespace Reaper
             ForegroundColor = ConsoleColor.Green;
             CursorVisible = false;
 
-            Root weatherData = Inputs.APICall(city, apiCode, unitPreference, config!.ApiKey).Result;
+            Root weatherData = Inputs.APICall(city, apiCode, unitPreference, config.ApiKey).Result;
 
             var content = Outputs.WeatherOutput(weatherData, unitPreference);
 

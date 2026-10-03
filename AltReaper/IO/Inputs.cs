@@ -19,8 +19,8 @@ namespace Reaper.IO
         public static async Task<WeatherResponse.Root> APICall(string city, string langPreferenceShort, string unitPreference, string APIKey)
         {
             //Use default system proxy settings
-            IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
-            defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
+            IWebProxy? defaultWebProxy = WebRequest.DefaultWebProxy;
+            defaultWebProxy?.Credentials = CredentialCache.DefaultCredentials;
             HttpClientHandler handler = new()
             {
                 Proxy = defaultWebProxy,
@@ -30,7 +30,8 @@ namespace Reaper.IO
                 BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"),
             };
 
-            return await client.GetFromJsonAsync<WeatherResponse.Root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}");
+            return await client.GetFromJsonAsync<WeatherResponse.Root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}")
+                ?? throw new InvalidOperationException("The weather API returned an empty response.");
         }
 
         public static bool ConfigGen(JsonHandling.Config config)
@@ -42,17 +43,17 @@ namespace Reaper.IO
             Write("\nEnter the mail address which you want use to send mails\n>");
             CursorVisible = true;
             ForegroundColor = ConsoleColor.White;
-            string senderMail = ReadLine();
+            string senderMail = ReadLine() ?? "";
             ForegroundColor = ConsoleColor.Green;
             Write("\nEnter the password for the mail (won't be shown) letter by letter, then press enter\n>");
             string senderMailPassword = Helper.PasswordMaker();
             Write("\nEnter the smtp host domain\"\n>");
             ForegroundColor = ConsoleColor.White;
-            string hostDomain = ReadLine();
+            string hostDomain = ReadLine() ?? "";
             ForegroundColor = ConsoleColor.Green;
             Write("\nEnter the smtp port Number\n>");
             ForegroundColor = ConsoleColor.White;
-            string portNumber = ReadLine();
+            string portNumber = ReadLine() ?? "";
             ForegroundColor = ConsoleColor.Green;
             //empty bcc means no BCC mail
             string BCC = "";
@@ -63,7 +64,7 @@ namespace Reaper.IO
                 Write("\nEnter the mail address of the BCC archive mail\n>");
                 CursorVisible = true;
                 ForegroundColor = ConsoleColor.White;
-                BCC = ReadLine();
+                BCC = ReadLine() ?? "";
                 ForegroundColor = ConsoleColor.Green;
             }
             CursorVisible = false;
@@ -97,7 +98,7 @@ namespace Reaper.IO
             if (!File.Exists(GlobalVars.cfgLoc))
             {
                 Write("\nEnter your APIKey\n>");
-                string apiKey = ReadLine();
+                string apiKey = ReadLine() ?? "";
                 var tmp = new JsonHandling.Config
                 {
                     ApiKey = apiKey,

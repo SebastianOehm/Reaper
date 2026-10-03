@@ -42,14 +42,14 @@ namespace Reaper
                     if (Checks.CfgChecker(config))
                     {
                         Inputs.ConfigGen(config);
-                        config = JsonSerializer.Deserialize<JsonHandling.Config>(File.ReadAllText(GlobalVars.cfgLoc));
+                        config = JsonSerializer.Deserialize<JsonHandling.Config>(File.ReadAllText(GlobalVars.cfgLoc))!;
                     }
                     Write($"\n{Properties.Resources.mailAddressQuery}\n>");
                     CursorVisible = true;
                     ForegroundColor = ConsoleColor.White;
                     ForegroundColor = ConsoleColor.Green;
                     CursorVisible = false;
-                    if (Outputs.MailOutput(ReadLine(), Properties.Resources.yourWeatherInfo, content, config))
+                    if (Outputs.MailOutput(ReadLine() ?? "", Properties.Resources.yourWeatherInfo, content, config))
                     {
                         Closer(config);
                     }

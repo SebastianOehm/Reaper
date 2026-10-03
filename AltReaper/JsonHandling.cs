@@ -7,18 +7,18 @@ namespace Reaper
         public class Config
         {
             [JsonPropertyName("apiKey")]
-            public string ApiKey { get; set; }
+            public string ApiKey { get; set; } = string.Empty;
             [JsonPropertyName("senderMail")]
-            public string SenderMail { get; set; }
+            public string SenderMail { get; set; } = string.Empty;
 
             [JsonPropertyName("senderMailPassword")]
-            public string SenderMailPassword { get; set; }
+            public string SenderMailPassword { get; set; } = string.Empty;
             [JsonPropertyName("hostDomain")]
-            public string HostDomain { get; set; }
+            public string HostDomain { get; set; } = string.Empty;
             [JsonPropertyName("portNumber")]
-            public string PortNumber { get; set; }
+            public string PortNumber { get; set; } = string.Empty;
             [JsonPropertyName("bcc")]
-            public string Bcc { get; set; }
+            public string Bcc { get; set; } = string.Empty;
         }
     }
     public static class WeatherResponse
@@ -26,11 +26,11 @@ namespace Reaper
         public class Weather
         {
             [JsonPropertyName("description")]
-            public string Description { get; set; }
+            public string Description { get; set; } = string.Empty;
             [JsonPropertyName("main")]
-            public string Main { get; set; }
+            public string Main { get; set; } = string.Empty;
             [JsonPropertyName("icon")]
-            public string Icon { get; set; }
+            public string Icon { get; set; } = string.Empty;
         }
         public class Main
         {
@@ -54,7 +54,7 @@ namespace Reaper
             [JsonPropertyName("sunset")]
             public long Sunset { get; set; }
             [JsonPropertyName("country")]
-            public string Country { get; set; }
+            public string Country { get; set; } = string.Empty;
         }
         public class Wind
         {
@@ -67,19 +67,19 @@ namespace Reaper
         public class Root
         {
             [JsonPropertyName("weather")]
-            public List<Weather> Weather { get; set; }
+            public List<Weather> Weather { get; set; } = [];
             [JsonPropertyName("main")]
-            public Main Main { get; set; }
+            public Main Main { get; set; } = new();
             [JsonPropertyName("sys")]
-            public Sys Sys { get; set; }
+            public Sys Sys { get; set; } = new();
             [JsonPropertyName("wind")]
-            public Wind Wind { get; set; }
+            public Wind Wind { get; set; } = new();
             [JsonPropertyName("dt")]
             public long Dt { get; set; }
             [JsonPropertyName("timezone")]
             public int Timezone { get; set; }
             [JsonPropertyName("name")]
-            public string Name { get; set; }
+            public string Name { get; set; } = string.Empty;
         }
     }
 }
