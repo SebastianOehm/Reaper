@@ -12,15 +12,15 @@ namespace Reaper.IO
 
             // Determine culture name and API code using app-level mappings
             string cultureName = "en";
-            if (Reaper.globalVars.appToCulture != null && Reaper.globalVars.appToCulture.ContainsKey(selectedDisplay))
+            if (Reaper.GlobalVars.appToCulture != null && Reaper.GlobalVars.appToCulture.ContainsKey(selectedDisplay))
             {
-                cultureName = Reaper.globalVars.appToCulture[selectedDisplay];
+                cultureName = Reaper.GlobalVars.appToCulture[selectedDisplay];
             }
 
             string apiCode = "en";
-            if (Reaper.globalVars.appToApiCode != null && Reaper.globalVars.appToApiCode.ContainsKey(selectedDisplay))
+            if (Reaper.GlobalVars.appToApiCode != null && Reaper.GlobalVars.appToApiCode.ContainsKey(selectedDisplay))
             {
-                apiCode = Reaper.globalVars.appToApiCode[selectedDisplay];
+                apiCode = Reaper.GlobalVars.appToApiCode[selectedDisplay];
             }
 
             CultureInfo culture = CultureInfo.InvariantCulture;

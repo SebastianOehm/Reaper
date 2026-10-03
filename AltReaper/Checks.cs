@@ -6,19 +6,19 @@ namespace Reaper
 {
     internal class Checks
     {
-        public static bool cfgChecker(JsonHandling.config config)
+        public static bool CfgChecker(JsonHandling.Config config)
         {
             bool[] bools = {
-                string.IsNullOrEmpty(config.apiKey),
-                string.IsNullOrEmpty(config.senderMail),
-                string.IsNullOrEmpty(config.senderMailPassword),
-                string.IsNullOrEmpty(config.hostDomain),
-                string.IsNullOrEmpty(config.portNumber),
+                string.IsNullOrEmpty(config.ApiKey),
+                string.IsNullOrEmpty(config.SenderMail),
+                string.IsNullOrEmpty(config.SenderMailPassword),
+                string.IsNullOrEmpty(config.HostDomain),
+                string.IsNullOrEmpty(config.PortNumber),
                 false
             };
             try
             {
-                if (int.Parse(config.portNumber) < 0 || int.Parse(config.portNumber) > 65535)
+                if (int.Parse(config.PortNumber) < 0 || int.Parse(config.PortNumber) > 65535)
                 { bools[5] = true; }
             }
             catch { return true; }

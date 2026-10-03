@@ -5,7 +5,7 @@ using Reaper.IO;
 
 namespace Reaper
 {
-    public static class globalVars
+    public static class GlobalVars
     {
         // Load application metadata from resources
         public static string[] devData = { Properties.Resources.AppName, Properties.Resources.DevName };
@@ -29,7 +29,7 @@ namespace Reaper
     }
     internal class Helper
     {
-        public static void MailOption(JsonHandling.config config, String[] content)
+        public static void MailOption(JsonHandling.Config config, String[] content)
         {
             string[] mailOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
             Menu mailMenu = new(Properties.Resources.mailWanted, mailOptions);
@@ -39,10 +39,10 @@ namespace Reaper
                 bool partSuccess = false;
                 while (!partSuccess)
                 {
-                    if (Checks.cfgChecker(config))
+                    if (Checks.CfgChecker(config))
                     {
-                        Inputs.configGen(config);
-                        config = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(globalVars.cfgLoc));
+                        Inputs.ConfigGen(config);
+                        config = JsonSerializer.Deserialize<JsonHandling.Config>(File.ReadAllText(GlobalVars.cfgLoc));
                     }
                     Write($"\n{Properties.Resources.mailAddressQuery}\n>");
                     CursorVisible = true;
@@ -103,34 +103,34 @@ namespace Reaper
         public static void Closer()
         {
             Uninstaller();
-            WriteLine(string.Format(Properties.Resources.ThankYouFormat, globalVars.devData[0]));
+            WriteLine(string.Format(Properties.Resources.ThankYouFormat, GlobalVars.devData[0]));
             WriteLine(Properties.Resources.WeatherPoweredBy);
-            WriteLine(string.Format(Properties.Resources.BylineFormat, globalVars.devData[0], globalVars.devData[1]));
+            WriteLine(string.Format(Properties.Resources.BylineFormat, GlobalVars.devData[0], GlobalVars.devData[1]));
             WriteLine(Properties.Resources.PressAnyKeyExit);
             ReadKey(true);
             Environment.Exit(0);
         }
-        public static void Closer(JsonHandling.config config)
+        public static void Closer(JsonHandling.Config config)
         {
             WriteLine($"{Properties.Resources.mailSuccessMessage}");
             Uninstaller();
-            WriteLine(string.Format(Properties.Resources.ThankYouFormat, globalVars.devData[0]));
+            WriteLine(string.Format(Properties.Resources.ThankYouFormat, GlobalVars.devData[0]));
             WriteLine(Properties.Resources.WeatherPoweredBy);
-            WriteLine(string.Format(Properties.Resources.MailPoweredByFormat, config.senderMail.Split('@')[1]));
-            WriteLine(string.Format(Properties.Resources.BylineFormat, globalVars.devData[0], globalVars.devData[1]));
+            WriteLine(string.Format(Properties.Resources.MailPoweredByFormat, config.SenderMail.Split('@')[1]));
+            WriteLine(string.Format(Properties.Resources.BylineFormat, GlobalVars.devData[0], GlobalVars.devData[1]));
             WriteLine(Properties.Resources.PressAnyKeyExit);
             ReadKey(true);
             Environment.Exit(0);
         }
         public static void Uninstaller()
         {
-            string uninstallPrompt = string.Format(Properties.Resources.UninstallPromptFormat, globalVars.devData[0]);
+            string uninstallPrompt = string.Format(Properties.Resources.UninstallPromptFormat, GlobalVars.devData[0]);
             string[] uninstallOptions = { Properties.Resources.YesOption, Properties.Resources.NoOption };
             Menu uninstallMenu = new(uninstallPrompt, uninstallOptions);
             int uninstallChoice = uninstallMenu.IRExecute();
             if (uninstallChoice == 0)
             {
-                Directory.Delete(globalVars.baseLoc, true);
+                Directory.Delete(GlobalVars.baseLoc, true);
             }
         }
     }

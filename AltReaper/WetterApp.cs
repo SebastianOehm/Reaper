@@ -31,7 +31,7 @@ namespace Reaper
                 {
                     try
                     {
-                        Helper.SuperUserMode(Helper.PasswordMaker(), Properties.Resources.AppName, globalVars.baseLoc);
+                        Helper.SuperUserMode(Helper.PasswordMaker(), Properties.Resources.AppName, GlobalVars.baseLoc);
                         break;
                     }
                     catch { Write("\n" + Properties.Resources.ErrorRetypePassword + "\n>"); continue; }
@@ -39,13 +39,13 @@ namespace Reaper
             }
             else { Write(Properties.Resources.ContinuingStandardMode); }
 
-            string chosenLanguage = Inputs.langPreference();
+            string chosenLanguage = Inputs.LangPreference();
             (string apiCode, CultureInfo culture) = LanguageLoader.Load(chosenLanguage);
             Thread.CurrentThread.CurrentUICulture = culture;
             Thread.CurrentThread.CurrentCulture = culture;
 
             Inputs.ConfigGetter();
-            config config = JsonSerializer.Deserialize<config>(File.ReadAllText(globalVars.cfgLoc));
+            Config config = JsonSerializer.Deserialize<Config>(File.ReadAllText(GlobalVars.cfgLoc));
 
 
             string unitPreference = Inputs.UnitPreference();
@@ -69,7 +69,7 @@ namespace Reaper
             ForegroundColor = ConsoleColor.Green;
             CursorVisible = false;
 
-            root weatherData = Inputs.APICall(city, apiCode, unitPreference, config!.apiKey).Result;
+            Root weatherData = Inputs.APICall(city, apiCode, unitPreference, config!.ApiKey).Result;
 
             var content = Outputs.WeatherOutput(weatherData, unitPreference);
 

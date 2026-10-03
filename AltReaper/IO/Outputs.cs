@@ -6,12 +6,12 @@ namespace Reaper.IO
 {
     internal class Outputs
     {
-        public static string[] WeatherOutput(WeatherResponse.root weatherData, string unitPreference)
+        public static string[] WeatherOutput(WeatherResponse.Root weatherData, string unitPreference)
         {
             //time & timezones, units
             char unitSymbol;
             DateTime localSystemTime = DateTime.Now;
-            int timeZoneShiftFromUTC = weatherData.timezone / 3600;
+            int timeZoneShiftFromUTC = weatherData.Timezone / 3600;
             string timezoneUTC;
             DateTime locTime = DateTime.UtcNow.AddHours(timeZoneShiftFromUTC);
             timezoneUTC = timeZoneShiftFromUTC >= 0 ? $"UTC+{timeZoneShiftFromUTC}" : $"UTC{timeZoneShiftFromUTC}" ;
@@ -21,13 +21,13 @@ namespace Reaper.IO
             List<string> content = new();
             string spacer = "\n-------------------------------------\n";
             content.Add(spacer);
-            content.Add($"{Properties.Resources.theWeatherIn}: {weatherData.name}, {weatherData.sys.country}");
+            content.Add($"{Properties.Resources.theWeatherIn}: {weatherData.Name}, {weatherData.Sys.Country}");
             content.Add($"{Properties.Resources.localSystemTime}: {localSystemTime}");
             content.Add($"{Properties.Resources.timeAtDestination}: : {locTime} {timezoneUTC} ");
-            content.Add($"{Properties.Resources.temp}: {weatherData.main.temp:0.#}°{unitSymbol}");
-            content.Add($"{Properties.Resources.lowestTemp}: {weatherData.main.temp_min:0.#}°{unitSymbol}");
-            content.Add($"{Properties.Resources.highestTemp}: {weatherData.main.temp_max:0.#}°{unitSymbol}");
-            content.Add($"{Properties.Resources.description}: {weatherData.weather[0].description}");
+            content.Add($"{Properties.Resources.temp}: {weatherData.Main.Temp:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.lowestTemp}: {weatherData.Main.TempMin:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.highestTemp}: {weatherData.Main.TempMax:0.#}°{unitSymbol}");
+            content.Add($"{Properties.Resources.description}: {weatherData.Weather[0].Description}");
             content.Add(spacer);
             string[] cArray = content.ToArray();
             WriteLine(string.Join("\r\n", cArray));
@@ -35,7 +35,7 @@ namespace Reaper.IO
             while (ReadKey(true).Key != ConsoleKey.Enter) { continue; }
             return cArray;
         }
-        public static bool MailOutput(string recipient, string subjectLine, string[] content, JsonHandling.config config)
+        public static bool MailOutput(string recipient, string subjectLine, string[] content, JsonHandling.Config config)
         {
             //Set salutation
             Write($"\n{Properties.Resources.nameOr}\n>");
@@ -46,20 +46,20 @@ namespace Reaper.IO
             ForegroundColor = ConsoleColor.Green;
             CursorVisible = false;
             //Set smtp config
-            var smtpClient = new SmtpClient(config.hostDomain, int.Parse(config.portNumber))
+            var smtpClient = new SmtpClient(config.HostDomain, int.Parse(config.PortNumber))
             {
-                Credentials = new NetworkCredential(config.senderMail, config.senderMailPassword),
+                Credentials = new NetworkCredential(config.SenderMail, config.SenderMailPassword),
                 EnableSsl = true,
             };
 
             //Set smtp content
             var mailMessage = new MailMessage()
             {
-                From = new MailAddress(config.senderMail),
+                From = new MailAddress(config.SenderMail),
                 Priority = MailPriority.Low,
                 Subject = subjectLine,
                 IsBodyHtml = true,
-                Body = HtmlBody.getBody(content, globalVars.easterEgg, name, config)
+                Body = HtmlBody.GetBody(content, GlobalVars.easterEgg, name, config)
             };
 
             //Set recipient
@@ -67,10 +67,10 @@ namespace Reaper.IO
 
             //Set bcc for analysation/archivating usage
             //empty bcc means no BCC mail. Older configs stored the localized "no" instead, so accept that of every app language
-            bool noBcc = string.IsNullOrWhiteSpace(config.bcc) || globalVars.appToCulture.Values.Any(c =>
-                config.bcc == Properties.Resources.ResourceManager.GetString(nameof(Properties.Resources.NoOption), new System.Globalization.CultureInfo(c)));
+            bool noBcc = string.IsNullOrWhiteSpace(config.Bcc) || GlobalVars.appToCulture.Values.Any(c =>
+                config.Bcc == Properties.Resources.ResourceManager.GetString(nameof(Properties.Resources.NoOption), new System.Globalization.CultureInfo(c)));
             if (noBcc) { }
-            else { mailMessage.Bcc.Add(config.bcc); }
+            else { mailMessage.Bcc.Add(config.Bcc); }
 
             //sending
             try { smtpClient.Send(mailMessage); }

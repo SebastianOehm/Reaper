@@ -16,7 +16,7 @@ namespace Reaper.IO
 {
     internal class Inputs
     {
-        public static async Task<WeatherResponse.root> APICall(string city, string langPreferenceShort, string unitPreference, string APIKey)
+        public static async Task<WeatherResponse.Root> APICall(string city, string langPreferenceShort, string unitPreference, string APIKey)
         {
             //Use default system proxy settings
             IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
@@ -30,15 +30,15 @@ namespace Reaper.IO
                 BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"),
             };
 
-            return await client.GetFromJsonAsync<WeatherResponse.root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}");
+            return await client.GetFromJsonAsync<WeatherResponse.Root>($"weather?q={city}&lang={langPreferenceShort}&units={unitPreference}&appid={APIKey}");
         }
 
-        public static bool configGen(JsonHandling.config config)
+        public static bool ConfigGen(JsonHandling.Config config)
         {
             //checks if config file exists and if all lines have information
-            if (File.Exists(globalVars.cfgLoc) && Checks.cfgChecker(config) == false) { return true; }
+            if (File.Exists(GlobalVars.cfgLoc) && Checks.CfgChecker(config) == false) { return true; }
 
-            string apiKey = config.apiKey;
+            string apiKey = config.ApiKey;
             Write("\nEnter the mail address which you want use to send mails\n>");
             CursorVisible = true;
             ForegroundColor = ConsoleColor.White;
@@ -68,16 +68,16 @@ namespace Reaper.IO
             }
             CursorVisible = false;
 
-            var json = new JsonHandling.config
+            var json = new JsonHandling.Config
             {
-                apiKey = apiKey,
-                senderMail = senderMail,
-                senderMailPassword = senderMailPassword,
-                hostDomain = hostDomain,
-                portNumber = portNumber,
-                bcc = BCC
+                ApiKey = apiKey,
+                SenderMail = senderMail,
+                SenderMailPassword = senderMailPassword,
+                HostDomain = hostDomain,
+                PortNumber = portNumber,
+                Bcc = BCC
             };
-            File.WriteAllText(globalVars.cfgLoc, JsonSerializer.Serialize(json));
+            File.WriteAllText(GlobalVars.cfgLoc, JsonSerializer.Serialize(json));
             return true;
         }
         public static string UnitPreference()
@@ -89,29 +89,29 @@ namespace Reaper.IO
         }
         public static void ConfigGetter()
         {
-            JsonHandling.config test = null;
-            try { test = JsonSerializer.Deserialize<JsonHandling.config>(File.ReadAllText(globalVars.cfgLoc)); }
-            catch { File.Delete(globalVars.cfgLoc); }
-            if (!File.Exists(globalVars.cfgLoc))
+            JsonHandling.Config test = null;
+            try { test = JsonSerializer.Deserialize<JsonHandling.Config>(File.ReadAllText(GlobalVars.cfgLoc)); }
+            catch { File.Delete(GlobalVars.cfgLoc); }
+            if (!File.Exists(GlobalVars.cfgLoc))
             {
                 Write("\nEnter your APIKey\n>");
                 string apiKey = ReadLine();
-                var tmp = new JsonHandling.config
+                var tmp = new JsonHandling.Config
                 {
-                    apiKey = apiKey,
-                    senderMail = "",
-                    senderMailPassword = "",
-                    hostDomain = "",
-                    portNumber = "",
-                    bcc = ""
+                    ApiKey = apiKey,
+                    SenderMail = "",
+                    SenderMailPassword = "",
+                    HostDomain = "",
+                    PortNumber = "",
+                    Bcc = ""
                 };
-                File.WriteAllText(globalVars.cfgLoc, JsonSerializer.Serialize(tmp));
+                File.WriteAllText(GlobalVars.cfgLoc, JsonSerializer.Serialize(tmp));
             }
         }
-        public static string langPreference()
+        public static string LangPreference()
         {
             List<string> availableLanguages = new();
-            foreach (string l in globalVars.appLanguages)
+            foreach (string l in GlobalVars.appLanguages)
             {
                 availableLanguages.Add(l);
             }
