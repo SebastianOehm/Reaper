@@ -121,7 +121,8 @@
     <value>Gerät ist online</value>
   </data>
   <data name="DeviceOfflineDetails" xml:space="preserve">
-    <value>Ihr Gerät ist nicht mit dem Internet verbunden.
+    <value>      
+Ihr Gerät ist nicht mit dem Internet verbunden.
 Diese Anwendung benötigt Internetzugang.
 Bitte verbinden Sie Ihr Gerät mit dem Internet, um diese Anwendung zu benutzen.</value>
   </data>
@@ -135,7 +136,8 @@ Bitte verbinden Sie Ihr Gerät mit dem Internet, um diese Anwendung zu benutzen.
     <value>Netzwerkfehler beim Kontaktieren der API: {0}</value>
   </data>
   <data name="ExceptionRaisedFormat" xml:space="preserve">
-    <value>Die folgende Ausnahme wurde ausgelöst : {0}</value>
+    <value>
+Die folgende Ausnahme wurde ausgelöst : {0}</value>
   </data>
   <data name="AppTitleFormat" xml:space="preserve">
     <value>{0} v{1}</value>
